@@ -32,13 +32,6 @@ public class RoomGeneration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        Debug.Log(RandomNumberGenerator.instance.Next());
-        
-        
-        
-
-
         this.currentRoom = new Room();
         Grid roomObject = GetComponent<Grid>();
         Tilemap[] tilemaps = GetComponentsInChildren<Tilemap>();

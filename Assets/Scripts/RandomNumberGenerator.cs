@@ -21,7 +21,7 @@ public class RandomNumberGenerator : MonoBehaviour
         {
             //if not, set instance to this
             instance = this;
-            Debug.Log(string.Format("Seed is {0}", seed));
+            //Debug.Log(string.Format("Seed is {0}", seed));
             if (seed != "")
             {
                 Random.InitState(seed.GetHashCode());
@@ -31,7 +31,7 @@ public class RandomNumberGenerator : MonoBehaviour
 
             for (int i = 0; i < 5000; i++)
             {
-                randomNumbers.Add(Random.Range(01, 99));
+                randomNumbers.Add(Random.Range(11, 78));
                 //Debug.Log(randomNumbers[i]);
             }
 
