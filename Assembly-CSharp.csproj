@@ -72,6 +72,7 @@
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\Trigger.cs" />
     <Compile Include="Assets\Scripts\ExitRoom.cs" />
     <Compile Include="Assets\Scripts\PlayerMove.cs" />
+    <Compile Include="Assets\Scripts\RandomNumberGenerator.cs" />
     <Compile Include="Assets\Scripts\Room.cs" />
     <Compile Include="Assets\Scripts\RoomGeneration.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
