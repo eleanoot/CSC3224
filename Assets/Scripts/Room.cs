@@ -8,6 +8,8 @@ public class Room
     // Represent the contents of the fillable grid with a 2D array of ID values.
     private string[,] population;
 
+    private Dictionary<string, GameObject> name2Prefab;
+
     public Room()
     {
         // Initialise the grid.
@@ -19,6 +21,8 @@ public class Room
                 this.population[xIndex, yIndex] = "";
             }
         }
+
+        this.name2Prefab = new Dictionary<string, GameObject>();
         
     }
 
@@ -41,6 +45,11 @@ public class Room
 
                     // Need to subtract 4 as grid matrix (0,0) is lower left corner, but tilemap (0,0) is the centre.
                     tilemap.SetTile(new Vector3Int(xIndex - 4, yIndex - 4, 0), obstacleTile);
+                }
+                else if (this.population[xIndex, yIndex] != "")
+                {
+                    GameObject prefab = GameObject.Instantiate(this.name2Prefab[this.population[xIndex, yIndex]]);
+                    prefab.transform.position = new Vector2(xIndex - 4 + 0.5f, yIndex - 4 + 0.5f);
                 }
             }
         }
@@ -158,6 +167,23 @@ public class Room
             }
         }
         
+    }
+
+    public void PopulatePrefabs(int numberOfPrefabs, GameObject[] possiblePrefabs)
+    {
+        for (int prefabIndex = 0; prefabIndex < numberOfPrefabs; prefabIndex += 1)
+        {
+            // Get the next random number to choose the enemy being added here.
+            int choiceIndex = RandomNumberGenerator.instance.Next();
+            if (choiceIndex >= possiblePrefabs.Length)
+                choiceIndex = ReduceNumber(choiceIndex, possiblePrefabs.Length);
+
+            GameObject prefab = possiblePrefabs[choiceIndex];
+            List<Vector2Int> region = FindFreeRegion(new Vector2Int(1, 1));
+
+            this.population[region[0].x, region[0].y] = prefab.name;
+            this.name2Prefab[prefab.name] = prefab;
+        }
     }
 
     public int ReduceNumber(int num, int possibleSizes)

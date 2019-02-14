@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class PlayerMove : MonoBehaviour
+public class Player : MonoBehaviour
 {
     // Tilemap references to check for collisions. 
     // CAN'T just use Unity's colliders with the current smooth movement system as will get stuck forever trying to move onto that tile. 
@@ -18,10 +18,13 @@ public class PlayerMove : MonoBehaviour
 
     // Reference to the animation controller for the player to change walking animation direction.
     private Animator anim;
+    // Reference to the sprite renderer to flash the sprite on hit. 
+    private Renderer rend;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        rend = GetComponent<Renderer>();
     }
 
     void Update()
@@ -100,7 +103,30 @@ public class PlayerMove : MonoBehaviour
         
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Magic")
+        {
+            StartCoroutine(IsHit());
+        }
+
+    }
+
     /* COROUTINES */
+    // 'Flash' the sprite when attacked.
+    private IEnumerator IsHit()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            rend.enabled = true;
+            yield return new WaitForSeconds(0.1f);
+            rend.enabled = false;
+            yield return new WaitForSeconds(0.1f);
+        }
+        rend.enabled = true;
+    }
+
+
     // Smoothly move the player from one tile to the next. 
     private IEnumerator SmoothMovement(Vector3 end)
     {
