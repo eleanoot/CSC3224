@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 253552990}
   - component: {fileID: 253552989}
   - component: {fileID: 253552994}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -148,6 +148,9 @@ MonoBehaviour:
   groundTilemap: {fileID: 1310269788}
   wallsTilemap: {fileID: 882465708}
   obstaclesTilemap: {fileID: 415205816}
+  unitsMask:
+    serializedVersion: 2
+    m_Bits: 512
   isMoving: 0
   onCooldown: 0
 --- !u!50 &253552990

@@ -6,13 +6,10 @@ public class FoxMage : Enemy
 {
     public GameObject magic;
     public float magicSpeed;
-
     
 
     void Awake()
     {
-        hp = 3.0;
-        damageDealt = 0.5;
         // right, up, left, down, 
         attackTargets = new List<Vector2> { new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(0, -1)  };
         actionTime = 2f;
@@ -34,13 +31,13 @@ public class FoxMage : Enemy
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0f)
             {
-                // Disable the enemy's box collider for now so the projectiles don't collide with itself.
                 float angle = 0f;
                 foreach (Vector2 n in attackTargets)
                 {
                     GameObject magicInst = Instantiate(magic, transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
                     magicInst.transform.SetParent(transform);
                     magicInst.GetComponent<Rigidbody2D>().AddForce(n * magicSpeed);
+                    magicInst.GetComponent<Project>().SetDamage(damageDealt);
                     angle += 90f;
                 }
                 

@@ -6,11 +6,15 @@ public class Project : MonoBehaviour
 {
     private Animator anim;
 
+    private double damageDealt;
+    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("player hit");
+            PlayerStats.Hp = -damageDealt;
+            Debug.Log(string.Format("player hp {0}", PlayerStats.Hp));
         }
         Destroy(gameObject);
 
@@ -20,7 +24,8 @@ public class Project : MonoBehaviour
     void Start()
     {
          anim = GetComponent<Animator>();
-    }
+        Physics2D.IgnoreCollision(transform.parent.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+;    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -35,5 +40,10 @@ public class Project : MonoBehaviour
             anim.Play("MagicOrangeFade");
         }
 
+    }
+
+    public void SetDamage(double damage)
+    {
+        damageDealt = damage;
     }
 }

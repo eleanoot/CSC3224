@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     public Tilemap wallsTilemap;
     public Tilemap obstaclesTilemap;
 
+    public LayerMask unitsMask;
+
     // How long the smooth movement will take.
     private float moveTime = 0.1f;
     // Booleans to check if we're currently transitioning and shouldn't be updating yet.
@@ -20,11 +22,13 @@ public class Player : MonoBehaviour
     private Animator anim;
     // Reference to the sprite renderer to flash the sprite on hit. 
     private Renderer rend;
+    private BoxCollider2D boxCollider;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         rend = GetComponent<Renderer>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     void Update()
@@ -90,8 +94,19 @@ public class Player : MonoBehaviour
         bool hasObstacle = getCell(obstaclesTilemap, targetTile) != null;
         bool hasWall = getCell(wallsTilemap, targetTile) != null;
 
+        // Raycast to check if an enemy prefab is on this tile. Cast a line from the start point to the end point on the Units layer.
+        //Disable the boxCollider so that linecast doesn't hit this object's own collider.
+        boxCollider.enabled = false;
+        RaycastHit2D hit = Physics2D.Linecast(startTile, targetTile, unitsMask);
+        //Re-enable boxCollider after linecast
+        boxCollider.enabled = true;
+
+        if (hit.transform != null)
+        {
+            Debug.Log("enemy hit");
+        }
         // If the tile to move to does not contain a wall or obstacle, it's a valid move. 
-        if (!hasObstacle && !hasWall)
+        else if (!hasObstacle && !hasWall)
         {
             StartCoroutine(SmoothMovement(targetTile));
         }
@@ -111,7 +126,7 @@ public class Player : MonoBehaviour
         }
 
     }
-
+    
     /* COROUTINES */
     // 'Flash' the sprite when attacked.
     private IEnumerator IsHit()
@@ -199,10 +214,11 @@ public class Player : MonoBehaviour
         onCooldown = false;
     }
     
-    /* TILEMAP UTILS */
+    /* TILEMAP/MOVEMENT UTILS */
     // Determine if the given cell position is part of this tilemap or not.
     private TileBase getCell(Tilemap tilemap, Vector2 cellWorldPos)
     {
         return tilemap.GetTile(tilemap.WorldToCell(cellWorldPos));
     }
+    
 }

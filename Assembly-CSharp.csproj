@@ -71,10 +71,12 @@
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\TimedAnimations.cs" />
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\Trigger.cs" />
     <Compile Include="Assets\Scripts\Enemies\FoxMage.cs" />
+    <Compile Include="Assets\Scripts\Enemies\FoxMageDark.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\ExitRoom.cs" />
     <Compile Include="Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\Project.cs" />
     <Compile Include="Assets\Scripts\RandomNumberGenerator.cs" />
     <Compile Include="Assets\Scripts\Room.cs" />

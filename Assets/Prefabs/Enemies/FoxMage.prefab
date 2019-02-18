@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3867485212661672197}
   - component: {fileID: 3867485212661672194}
   - component: {fileID: 3867485212661672196}
-  m_Layer: 0
+  - component: {fileID: 5767076757262806502}
+  m_Layer: 9
   m_Name: FoxMage
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -44,6 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c169bc3d5f78c3459dffde3e9da1a45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 2
+  damageDealt: 0.5
   magic: {fileID: 4975969554597251919, guid: 8bee251e57a14f44ead1f2f9a93cad7e, type: 3}
   magicSpeed: 100
 --- !u!212 &3867485212661672196
@@ -94,3 +97,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &5767076757262806502
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3867485212661672195}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.19, y: 0.4}
+    newSize: {x: 0.3671875, y: 0.265625}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.19, y: 0.4}
+  m_EdgeRadius: 0

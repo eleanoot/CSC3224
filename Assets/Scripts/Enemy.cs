@@ -5,11 +5,12 @@ using UnityEngine;
 // Inherits from base class for objects that can move. 
 public abstract class Enemy : MonoBehaviour
 {
-    protected double hp;
+    // How much HP this enemy has left.
+    public double hp;
     // How many hearts this enemy's attack knocks off the player.
-    protected double damageDealt;
+    public double damageDealt;
     // The squares this enemy aims for, if any.
-    protected static List<Vector2> attackTargets;
+    protected List<Vector2> attackTargets;
     // The time it takes this Enemy to act. 
     protected float actionTime;
     protected float attackTimer = 0f;
