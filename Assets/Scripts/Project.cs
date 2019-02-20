@@ -6,15 +6,14 @@ public class Project : MonoBehaviour
 {
     private Animator anim;
 
-    private double damageDealt;
+    private float damageDealt;
     
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            PlayerStats.Hp = -damageDealt;
-            Debug.Log(string.Format("player hp {0}", PlayerStats.Hp));
+            Stats.TakeDamage(damageDealt);
         }
         Destroy(gameObject);
 
@@ -23,7 +22,7 @@ public class Project : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-         anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         Physics2D.IgnoreCollision(transform.parent.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 ;    }
 
@@ -42,7 +41,7 @@ public class Project : MonoBehaviour
 
     }
 
-    public void SetDamage(double damage)
+    public void SetDamage(float damage)
     {
         damageDealt = damage;
     }

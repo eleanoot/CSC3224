@@ -103,7 +103,8 @@ public class Player : MonoBehaviour
 
         if (hit.transform != null)
         {
-            Debug.Log("enemy hit");
+            hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
+            //Debug.Log("enemy hit");
         }
         // If the tile to move to does not contain a wall or obstacle, it's a valid move. 
         else if (!hasObstacle && !hasWall)

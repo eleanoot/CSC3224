@@ -10,8 +10,8 @@ public class FoxMageDark : Enemy
 
     void Awake()
     {
-        hp = 3.0;
-        damageDealt = 0.5;
+        //hp = 3.0;
+        //damageDealt = 0.5f;
         // north east, north west, south west, south east
         attackTargets = new List<Vector2> { new Vector2(1, 1), new Vector2(-1, 1), new Vector2(-1, -1), new Vector2(1, -1) };
         actionTime = 2f;
@@ -40,6 +40,7 @@ public class FoxMageDark : Enemy
                     GameObject magicInst = Instantiate(magic, transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
                     magicInst.transform.SetParent(transform);
                     magicInst.GetComponent<Rigidbody2D>().AddForce(n * magicSpeed);
+                    magicInst.GetComponent<Project>().SetDamage(damageDealt);
                     angle += 90f;
                 }
 

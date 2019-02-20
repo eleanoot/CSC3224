@@ -8,18 +8,21 @@ public abstract class Enemy : MonoBehaviour
     // How much HP this enemy has left.
     public double hp;
     // How many hearts this enemy's attack knocks off the player.
-    public double damageDealt;
+    public float damageDealt;
     // The squares this enemy aims for, if any.
     protected List<Vector2> attackTargets;
     // The time it takes this Enemy to act. 
     protected float actionTime;
     protected float attackTimer = 0f;
+
+    // Reference to the sprite renderer to flash the sprite on hit. 
+    private Renderer rend;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rend = GetComponent<Renderer>();
     }
 
     // Will be overridden by functons in the inherited classes that specialise the enemy type.
@@ -29,5 +32,29 @@ public abstract class Enemy : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void TakeDamage(float dmg)
+    {
+        // Debug.Log(string.Format("{0} hit for {1} dmg", gameObject.name, dmg));
+        hp -= dmg;
+        StartCoroutine(IsHit());
+        
+    }
+
+    // 'Flash' the sprite when attacked.
+    private IEnumerator IsHit()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            rend.enabled = true;
+            yield return new WaitForSeconds(0.1f);
+            rend.enabled = false;
+            yield return new WaitForSeconds(0.1f);
+        }
+        rend.enabled = true;
+
+        if (hp <= 0)
+            Destroy(gameObject);
     }
 }

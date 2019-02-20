@@ -60,6 +60,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\HealthHeartSystem\Scripts\HealthBarController.cs" />
+    <Compile Include="Assets\HealthHeartSystem\Scripts\HealthBarHUDTester.cs" />
+    <Compile Include="Assets\HealthHeartSystem\Scripts\PlayerStats.cs" />
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\CollectableBounce.cs" />
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\Door.cs" />
@@ -74,13 +77,16 @@
     <Compile Include="Assets\Scripts\Enemies\FoxMageDark.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\ExitRoom.cs" />
+    <Compile Include="Assets\Scripts\FullscreenSprite.cs" />
+    <Compile Include="Assets\Scripts\HealthBar.cs" />
     <Compile Include="Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\Project.cs" />
     <Compile Include="Assets\Scripts\RandomNumberGenerator.cs" />
     <Compile Include="Assets\Scripts\Room.cs" />
     <Compile Include="Assets\Scripts\RoomGeneration.cs" />
+    <Compile Include="Assets\Scripts\Stats.cs" />
+    <None Include="Assets\HealthHeartSystem\readme.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Eleanor/Documents/Computer Science/Stage 3/Game Dev/Game Dev Prototype/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

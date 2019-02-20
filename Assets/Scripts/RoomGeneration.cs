@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class RoomGeneration : MonoBehaviour
 {
@@ -34,6 +35,8 @@ public class RoomGeneration : MonoBehaviour
 
     private GameObject randomGen;
 
+    private Text roomText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +53,12 @@ public class RoomGeneration : MonoBehaviour
         this.currentRoom.PopulateDecorations(this.noOfDecorations, this.possibleDecorationSizes);
         this.currentRoom.AddDecorationToTilemap(decorationTilemap, this.decorationTiles);
 
-        
+        // Increment the room count and display it in the GUI.
+        roomText = GameObject.Find("RoomText").GetComponent<Text>();
+        Stats.RoomCount++;
+        roomText.text = "Room " + Stats.RoomCount;
     }
+
+    
     
 }
