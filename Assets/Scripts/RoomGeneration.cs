@@ -37,26 +37,45 @@ public class RoomGeneration : MonoBehaviour
 
     private Text roomText;
 
+    private static ItemManager items;
+
     // Start is called before the first frame update
     void Start()
     {
         this.currentRoom = new Room();
         Grid roomObject = GetComponent<Grid>();
         Tilemap[] tilemaps = GetComponentsInChildren<Tilemap>();
-        this.currentRoom.PopulatePrefabs(this.noOfEnemies, this.possibleEnemies);
-
-        obstacleTilemap = tilemaps[2];
-        this.currentRoom.PopulateObstacles(this.noOfObstacles, this.possibleObstacleSizes);
-        this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
-
-        decorationTilemap = tilemaps[3];
-        this.currentRoom.PopulateDecorations(this.noOfDecorations, this.possibleDecorationSizes);
-        this.currentRoom.AddDecorationToTilemap(decorationTilemap, this.decorationTiles);
 
         // Increment the room count and display it in the GUI.
         roomText = GameObject.Find("RoomText").GetComponent<Text>();
         Stats.RoomCount++;
         roomText.text = "Room " + Stats.RoomCount;
+
+        if (Stats.RoomCount % 5 != 0)
+        {
+            this.currentRoom.PopulatePrefabs(this.noOfEnemies, this.possibleEnemies);
+
+            obstacleTilemap = tilemaps[2];
+            this.currentRoom.PopulateObstacles(this.noOfObstacles, this.possibleObstacleSizes);
+            this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
+        }
+        else
+        {
+            // Spawn an item room every 5 rooms (may change).
+            // eventually randomise 3 items and display in the middle with flavourtext when nearby. 
+            Instantiate(Resources.Load("Items/FairyDust"));
+
+        }
+        
+        decorationTilemap = tilemaps[3];
+        this.currentRoom.PopulateDecorations(this.noOfDecorations, this.possibleDecorationSizes);
+        this.currentRoom.AddDecorationToTilemap(decorationTilemap, this.decorationTiles);
+
+        
+
+        // eventually change to just item rooms. 
+        items = GetComponent<ItemManager>();
+
     }
 
     

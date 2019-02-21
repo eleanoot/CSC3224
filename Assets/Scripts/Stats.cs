@@ -21,6 +21,12 @@ public class Stats
 
     // the amount of damage the player's melee attack currently does.
     private static float dmg = 0.5f;
+    // the number of tiles away the player can melee attack. 
+    private static int range = 1;
+
+    // Each type of item the player has. 
+    public static List<Item> passives = new List<Item>();
+    public static Item active;
 
     /* ROOM COUNT */
     // Will probably need a full reset at some point to reset all this stuff for another run - setup function somewhere?
@@ -98,6 +104,19 @@ public class Stats
         set
         {
             dmg = value;
+        }
+    }
+
+    /* RANGE */
+    public static int Range
+    {
+        get
+        {
+            return range;
+        }
+        set
+        {
+            range = value;
         }
     }
 

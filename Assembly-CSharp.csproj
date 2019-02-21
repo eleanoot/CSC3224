@@ -79,6 +79,9 @@
     <Compile Include="Assets\Scripts\ExitRoom.cs" />
     <Compile Include="Assets\Scripts\FullscreenSprite.cs" />
     <Compile Include="Assets\Scripts\HealthBar.cs" />
+    <Compile Include="Assets\Scripts\Item.cs" />
+    <Compile Include="Assets\Scripts\ItemManager.cs" />
+    <Compile Include="Assets\Scripts\Items\FairyDust.cs" />
     <Compile Include="Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Project.cs" />
