@@ -7,7 +7,7 @@ public class Room
 {
     // Represent the contents of the fillable grid with a 2D array of ID values.
     private string[,] population;
-
+    
     private Dictionary<string, GameObject> name2Prefab;
 
     public Room()
@@ -50,6 +50,26 @@ public class Room
                 {
                     GameObject prefab = GameObject.Instantiate(this.name2Prefab[this.population[xIndex, yIndex]]);
                     prefab.transform.position = new Vector2(xIndex - 4 + 0.5f, yIndex - 4 + 0.5f);
+
+                    // If this is an item room, add the flavourtext tiles around this item. 
+                    if (Stats.RoomCount % 5 == 0)
+                    {
+                        GameObject textPrefab = GameObject.Instantiate(Resources.Load("ItemText")) as GameObject;
+                        textPrefab.transform.position = new Vector2(xIndex - 1 - 4 + 0.5f, yIndex - 4 + 0.5f);
+                        textPrefab.transform.SetParent(prefab.transform);
+
+                        textPrefab = GameObject.Instantiate(Resources.Load("ItemText")) as GameObject;
+                        textPrefab.transform.position = new Vector2(xIndex + 1 - 4 + 0.5f, yIndex - 4 + 0.5f);
+                        textPrefab.transform.SetParent(prefab.transform);
+
+                        textPrefab = GameObject.Instantiate(Resources.Load("ItemText")) as GameObject;
+                        textPrefab.transform.position = new Vector2(xIndex - 4 + 0.5f, yIndex + 1 - 4 + 0.5f);
+                        textPrefab.transform.SetParent(prefab.transform);
+
+                        textPrefab = GameObject.Instantiate(Resources.Load("ItemText")) as GameObject;
+                        textPrefab.transform.position = new Vector2(xIndex - 4 + 0.5f, yIndex - 1 - 4 + 0.5f);
+                        textPrefab.transform.SetParent(prefab.transform);
+                    }
                 }
             }
         }
@@ -166,10 +186,9 @@ public class Room
                 this.population[coord.x, coord.y] = "Decoration";
             }
         }
-        
     }
 
-    public void PopulatePrefabs(int numberOfPrefabs, GameObject[] possiblePrefabs)
+    public void PopulateEnemies(int numberOfPrefabs, GameObject[] possiblePrefabs)
     {
         for (int prefabIndex = 0; prefabIndex < numberOfPrefabs; prefabIndex += 1)
         {
@@ -183,6 +202,19 @@ public class Room
 
             this.population[region[0].x, region[0].y] = prefab.name;
             this.name2Prefab[prefab.name] = prefab;
+        }
+    }
+
+    public void PopulateItems(GameObject[] items)
+    {
+        // Populated at preset positions for item rooms. 
+        Vector2Int startPos = new Vector2Int(2, 4);
+        
+        for (int i = 0; i < items.Length; i++)
+        {
+            GameObject currentItem = items[i];
+            this.population[startPos.x + i*2, startPos.y] = currentItem.name;
+            this.name2Prefab[currentItem.name] = currentItem;
         }
     }
 

@@ -97,19 +97,29 @@ public class Player : MonoBehaviour
         // Raycast to check if an enemy prefab is on this tile. Cast a line from the start point to the end point on the Units layer.
         //Disable the boxCollider so that linecast doesn't hit this object's own collider.
         boxCollider.enabled = false;
-        RaycastHit2D hit = Physics2D.Linecast(startTile, targetTile, unitsMask);
+        // Set target tile for enemy spaces based on the player's current range.
+        Vector2 rangeTile = startTile + new Vector2(xDir * Stats.Range, yDir * Stats.Range);
+        RaycastHit2D hit = Physics2D.Linecast(startTile, rangeTile, unitsMask);
         //Re-enable boxCollider after linecast
         boxCollider.enabled = true;
 
-        if (hit.transform != null)
+        if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
         {
             hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
-            //Debug.Log("enemy hit");
         }
         // If the tile to move to does not contain a wall or obstacle, it's a valid move. 
         else if (!hasObstacle && !hasWall)
         {
             StartCoroutine(SmoothMovement(targetTile));
+
+            // Check if there's an item in front of the new tile. 
+            //boxCollider.enabled = false;
+            //hit = Physics2D.Linecast(targetTile, targetTile + new Vector2(xDir, yDir), unitsMask);
+            //boxCollider.enabled = true;
+            //if (hit.transform != null && hit.transform.gameObject.tag == "Item")
+            //    hit.transform.gameObject.SendMessage("DisplayText", true);
+            //else
+            //    hit.transform.gameObject.SendMessage("DisplayText", false);
         }
         else
         {

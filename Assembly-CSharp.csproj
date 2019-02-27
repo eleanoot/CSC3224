@@ -82,6 +82,8 @@
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\ItemManager.cs" />
     <Compile Include="Assets\Scripts\Items\FairyDust.cs" />
+    <Compile Include="Assets\Scripts\Items\Food.cs" />
+    <Compile Include="Assets\Scripts\ItemText.cs" />
     <Compile Include="Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Project.cs" />

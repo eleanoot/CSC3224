@@ -65,8 +65,9 @@ public class Stats
 
     public static void Heal(float health)
     {
-        hp += health;
-        ClampHealth();
+            hp += health;
+            ClampHealth();
+        
     }
     public static void TakeDamage(float dmg)
     {
@@ -88,7 +89,7 @@ public class Stats
 
     static void ClampHealth()
     {
-        hp = Mathf.Clamp(hp, 0, MAX_TOTAL_HEALTH);
+        hp = Mathf.Clamp(hp, 0, maxHp);
 
         if (onHealthChangedCallback != null)
             onHealthChangedCallback.Invoke();

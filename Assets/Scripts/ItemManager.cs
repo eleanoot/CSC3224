@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
     // Prevent the actual item pools from being refilled each time a room is reloaded. 
-    private static ItemManager instance = null;
+    public static ItemManager instance = null;
 
     public GameObject[] allItems; // the actual item prefabs to be instantiated.
+
+    public Text flavourText;
 
     [SerializeField]
     private static List<Item> common = new List<Item>();
