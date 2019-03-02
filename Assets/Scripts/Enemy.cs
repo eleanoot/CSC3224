@@ -10,7 +10,7 @@ public abstract class Enemy : MonoBehaviour
     // How many hearts this enemy's attack knocks off the player.
     public float damageDealt;
     // The squares this enemy aims for, if any.
-    protected List<Vector2> attackTargets;
+    protected List<Vector2Int> attackTargets;
     // The time it takes this Enemy to act. 
     protected float actionTime;
     protected float attackTimer = 0f;

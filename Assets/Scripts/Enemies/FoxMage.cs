@@ -11,7 +11,7 @@ public class FoxMage : Enemy
     void Awake()
     {
         // right, up, left, down, 
-        attackTargets = new List<Vector2> { new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(0, -1)  };
+        attackTargets = new List<Vector2Int> { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 0), new Vector2Int(0, -1) };
         actionTime = 2f;
     }
 

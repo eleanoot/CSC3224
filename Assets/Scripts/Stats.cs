@@ -4,6 +4,7 @@ using UnityEngine;
 
 // Static script to maintain player stats and modifiers between scenes
 // HP methods adapted from the free Unity store asset 'Simple Health Heart System' by ariel oliveira [o.arielg@gmail.com]
+
 public class Stats
 {
     // Count the number of rooms the player's passed through.
@@ -13,6 +14,7 @@ public class Stats
     public const int MAX_TOTAL_HEALTH = 6;
     public delegate void OnHealthChangedDelegate();
     public static OnHealthChangedDelegate onHealthChangedCallback;
+    public static bool isInvulnerable = false; // prevent hits for the period of sprite flash. 
 
     // the player's current hp 
     private static float hp = 3.0f;
@@ -69,10 +71,19 @@ public class Stats
             ClampHealth();
         
     }
-    public static void TakeDamage(float dmg)
+    public static bool TakeDamage(float dmg)
     {
-        hp -= dmg;
-        ClampHealth();
+        if (!isInvulnerable)
+        {
+            hp -= dmg;
+            ClampHealth();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+       
     }
 
     public void AddHealth()

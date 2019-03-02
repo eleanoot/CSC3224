@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     // Booleans to check if we're currently transitioning and shouldn't be updating yet.
     public bool isMoving = false;
     public bool onCooldown = false;
+    
 
     // Reference to the animation controller for the player to change walking animation direction.
     private Animator anim;
@@ -105,6 +106,7 @@ public class Player : MonoBehaviour
 
         if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
         {
+            //Debug.Log(string.Format("hit a {0}", hit.transform.gameObject.name));
             hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
         }
         // If the tile to move to does not contain a wall or obstacle, it's a valid move. 
@@ -140,7 +142,7 @@ public class Player : MonoBehaviour
     
     /* COROUTINES */
     // 'Flash' the sprite when attacked.
-    private IEnumerator IsHit()
+    public IEnumerator IsHit()
     {
         for (int i = 0; i < 5; i++)
         {
