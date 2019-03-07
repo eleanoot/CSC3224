@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
         // If the player is still moving, do nothing this update.
         if (isMoving || onCooldown)
             return;
+        
 
         // Get the move direction.
         int horizontal = (int)Input.GetAxisRaw("Horizontal");

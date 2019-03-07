@@ -30,6 +30,18 @@ public class Stats
     public static List<Item> passives = new List<Item>();
     public static Item active;
 
+    /* RESET TO DEFAULTS */
+    public static void Reset()
+    {
+        hp = 3.0f;
+        maxHp = 3.0f;
+        dmg = 0.5f;
+        range = 1;
+        passives.Clear();
+        active = null;
+        roomCount = 0;
+    }
+
     /* ROOM COUNT */
     // Will probably need a full reset at some point to reset all this stuff for another run - setup function somewhere?
     public static int RoomCount
@@ -77,6 +89,11 @@ public class Stats
         {
             hp -= dmg;
             ClampHealth();
+
+            if (hp <= 0)
+            {
+                Manager.instance.GameOver(true);
+            }
             return true;
         }
         else
