@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Static script to maintain player stats and modifiers between scenes
 // HP methods adapted from the free Unity store asset 'Simple Health Heart System' by ariel oliveira [o.arielg@gmail.com]
@@ -16,6 +17,8 @@ public class Stats
     public static OnHealthChangedDelegate onHealthChangedCallback;
     public static bool isInvulnerable = false; // prevent hits for the period of sprite flash. 
 
+   
+
     // the player's current hp 
     private static float hp = 3.0f;
     // the total amount of hp the player can currently have 
@@ -30,6 +33,11 @@ public class Stats
     public static List<Item> passives = new List<Item>();
     public static Item active;
 
+    // Stored in here rather than in item to retain between rooms. 
+    private static int activeItemCharge;
+    private static int currentCharge;
+    
+
     /* RESET TO DEFAULTS */
     public static void Reset()
     {
@@ -38,8 +46,16 @@ public class Stats
         dmg = 0.5f;
         range = 1;
         passives.Clear();
+        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+
+        foreach (GameObject i in items)
+        {
+            GameObject.Destroy(i);
+        }
         active = null;
         roomCount = 0;
+        activeItemCharge = 0;
+        currentCharge = 0;
     }
 
     /* ROOM COUNT */
@@ -146,6 +162,49 @@ public class Stats
         set
         {
             range = value;
+        }
+    }
+
+    /* ACTIVE ITEM */
+    public static int ActiveCharge
+    {
+        get
+        {
+            return activeItemCharge;
+        }
+        set
+        {
+            activeItemCharge = value;
+        }
+    }
+
+    public static int CurrentCharge
+    {
+        get
+        {
+            return currentCharge;
+        }
+        set
+        {
+            currentCharge = value;
+            if (currentCharge > activeItemCharge)
+                currentCharge = activeItemCharge;
+            
+            // Update the UI bar. 
+            GameObject.Find("ChargeBar").GetComponent<ProgressBar>().BarValue = currentCharge * (100 / (Stats.ActiveCharge == 0 ? 100 : Stats.ActiveCharge));
+        }
+    }
+
+    public static Item ActiveItem
+    {
+        set
+        {
+            active = value;
+            GameObject.Find("ActiveItem").GetComponent<ItemUI>().UpdateItem();
+        }
+        get
+        {
+            return active;
         }
     }
 

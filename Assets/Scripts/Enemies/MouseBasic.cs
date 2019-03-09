@@ -10,8 +10,7 @@ public class MouseBasic : Enemy
     public Tilemap obstaclesTilemap;
 
     public LayerMask unitsMask;
-
-    private Transform target;
+    
     private List<Path> bestPath = new List<Path>();
     private Animator anim;
 
@@ -19,8 +18,6 @@ public class MouseBasic : Enemy
     {
         Tilemap[] tilemaps = FindObjectsOfType<Tilemap>();
         obstaclesTilemap = tilemaps[0];
-        //Find the Player GameObject using its tag and store a reference to its transform component.
-        target = GameObject.FindGameObjectWithTag("Player").transform;
         anim = GetComponent<Animator>();
         // right, up, left, down, 
         attackTargets = new List<Vector2Int> { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 0), new Vector2Int(0, -1) };
@@ -100,9 +97,14 @@ public class MouseBasic : Enemy
             // TO-DO: some kind of resolution for if player and mouse move to same space at the same time.
             if (x == target.transform.position.x && y == target.transform.position.y)
             {
-                if (Stats.TakeDamage(damageDealt))
+                // Action on hit depends if the target is still the player or not. 
+                if (target.transform != GameObject.FindGameObjectWithTag("Player").transform)
+                {
+                    target.gameObject.SendMessage("IsHit");
+                }
+                else if (Stats.TakeDamage(damageDealt))
                     StartCoroutine(GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().IsHit()); // only flash the sprite if damage has actually been taken: prevent overlap of player being left invisible on final damage hit. 
-            
+                
             }
             else
             {
@@ -169,7 +171,7 @@ public class MouseBasic : Enemy
        this.GetComponent<BoxCollider2D>().enabled = false;
         RaycastHit2D hit = Physics2D.Linecast(start, end, unitsMask);
         this.GetComponent<BoxCollider2D>().enabled = true;
-        if (hit.transform != null && (!hit.collider.tag.Equals("Player")))
+        if (hit.transform != null && (hit.transform != target.transform))
         {
             // TO-DO: fix enemy going back and forth when player is right next to an enemy tile
           // Debug.Log(string.Format("enemy at {0}, {1}", end.x, end.y));

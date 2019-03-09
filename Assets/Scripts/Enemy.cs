@@ -11,6 +11,8 @@ public abstract class Enemy : MonoBehaviour
     public float damageDealt;
     // The squares this enemy aims for, if any.
     protected List<Vector2Int> attackTargets;
+    // The particular unit this enemy aims for, if any direction: by default its the player. 
+    protected Transform target;
     // The time it takes this Enemy to act. 
     protected float actionTime;
     protected float attackTimer = 0f;
@@ -23,6 +25,7 @@ public abstract class Enemy : MonoBehaviour
     void Start()
     {
         rend = GetComponent<Renderer>();
+        target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Will be overridden by functons in the inherited classes that specialise the enemy type.
@@ -40,6 +43,11 @@ public abstract class Enemy : MonoBehaviour
         hp -= dmg;
         StartCoroutine(IsHit());
         
+    }
+
+    protected void UpdateTarget(Transform newTarget)
+    {
+        target = newTarget;
     }
 
     // 'Flash' the sprite when attacked.

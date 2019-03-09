@@ -15,6 +15,9 @@ public class Manager : MonoBehaviour
     public static Text timerText;
     public static GameObject restartButton;
 
+    Coroutine timerCoroutine;
+    private bool timerRunning;
+
     void Awake()
     {
         //Check if instance already exists
@@ -48,7 +51,8 @@ public class Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(levelTimer());
+        timerCoroutine = StartCoroutine(levelTimer());
+        timerRunning = true;
     }
 
     IEnumerator levelTimer()
@@ -68,9 +72,18 @@ public class Manager : MonoBehaviour
             yield return null;
         }
 
-        timerText.text = string.Format("{0:0}:{1:00}", 0, 0); 
+        timerText.text = string.Format("{0:0}:{1:00}", 0, 0);
         GameOver(false);
+
     }
+
+    public void ResetTimer(float newTime)
+    {
+        StopCoroutine(timerCoroutine);
+        levelTimeInSeconds = newTime;
+        timerCoroutine = StartCoroutine(levelTimer());
+    }
+    
 
     // Update is called once per frame
     void Update()
@@ -86,7 +99,6 @@ public class Manager : MonoBehaviour
 
     public void RestartGame()
     {
-        Debug.Log("restarting");
         // Clear all player stats and items. 
         Stats.Reset();
         // Unpause the game.

@@ -73,6 +73,10 @@
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\Tile.cs" />
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\TimedAnimations.cs" />
     <Compile Include="Assets\HyperLuminal\2D Fantasy Forest Tileset\Scripts\Trigger.cs" />
+    <Compile Include="Assets\ProgressBar\Script\ProgressBar.cs" />
+    <Compile Include="Assets\ProgressBar\Script\ProgressBarCircle.cs" />
+    <Compile Include="Assets\Scripts\ConsoleController.cs" />
+    <Compile Include="Assets\Scripts\ConsoleView.cs" />
     <Compile Include="Assets\Scripts\Enemies\FoxMage.cs" />
     <Compile Include="Assets\Scripts\Enemies\FoxMageDark.cs" />
     <Compile Include="Assets\Scripts\Enemies\MouseBasic.cs" />
@@ -82,9 +86,11 @@
     <Compile Include="Assets\Scripts\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\ItemManager.cs" />
+    <Compile Include="Assets\Scripts\Items\CatPlush.cs" />
     <Compile Include="Assets\Scripts\Items\FairyDust.cs" />
     <Compile Include="Assets\Scripts\Items\Food.cs" />
     <Compile Include="Assets\Scripts\ItemText.cs" />
+    <Compile Include="Assets\Scripts\ItemUI.cs" />
     <Compile Include="Assets\Scripts\Manager.cs" />
     <Compile Include="Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />

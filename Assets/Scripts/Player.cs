@@ -37,7 +37,14 @@ public class Player : MonoBehaviour
         // If the player is still moving, do nothing this update.
         if (isMoving || onCooldown)
             return;
-        
+
+        if (Input.GetKeyDown("space"))
+        {
+            if (Stats.active != null)
+            {
+                Stats.active.OnUse();
+            }
+        }
 
         // Get the move direction.
         int horizontal = (int)Input.GetAxisRaw("Horizontal");
@@ -53,8 +60,9 @@ public class Player : MonoBehaviour
             // Start some delay between movements to prevent going too fast.
             StartCoroutine(ActionCooldown(0.2f));
             MovePlayer(horizontal, vertical);
-            
         }
+
+        
     }
 
     private void MovePlayer(int xDir, int yDir)
@@ -140,6 +148,8 @@ public class Player : MonoBehaviour
         }
 
     }
+
+
     
     /* COROUTINES */
     // 'Flash' the sprite when attacked.

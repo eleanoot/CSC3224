@@ -9,6 +9,9 @@ public class ExitRoom : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
+            // If any items are active on the board, disable them.
+            if (Stats.active != null)
+                Stats.active.gameObject.SetActive(false);
             SceneManager.LoadScene("Runner");
         }
     }

@@ -50,6 +50,9 @@ public class RoomGeneration : MonoBehaviour
         Stats.RoomCount++;
         roomText.text = "Room " + Stats.RoomCount;
 
+        // Increment active charge count from passing into another rooms.
+        Stats.CurrentCharge++;
+
         if (Stats.RoomCount % 5 != 0)
         {
             this.currentRoom.PopulateEnemies(this.noOfEnemies, this.possibleEnemies);
@@ -58,7 +61,7 @@ public class RoomGeneration : MonoBehaviour
             this.currentRoom.PopulateObstacles(this.noOfObstacles, this.possibleObstacleSizes);
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
         }
-        else
+        else // Item room. No enemies, just three items randomly rolled to choose from in the same positions every time. 
         {
             // Spawn an item room every 5 rooms (may change).
             // eventually randomise 3 items and display in the middle with flavourtext when nearby. 
@@ -67,13 +70,13 @@ public class RoomGeneration : MonoBehaviour
             GameObject[] chosenItems = new GameObject[3];
             chosenItems[0] = ItemManager.instance.allItems[0];
             chosenItems[1] = ItemManager.instance.allItems[1];
-            chosenItems[2] = ItemManager.instance.allItems[0];
+            chosenItems[2] = ItemManager.instance.allItems[2];
 
             this.currentRoom.PopulateItems(chosenItems);
             obstacleTilemap = tilemaps[2];
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
 
-            // Item room. No enemies, just three items randomly rolled to choose from in the same positions every time. 
+            
 
         }
         
