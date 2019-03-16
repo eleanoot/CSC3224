@@ -13,13 +13,17 @@ public class ItemManager : MonoBehaviour
     public Text flavourText;
 
     [SerializeField]
-    private static List<Item> common = new List<Item>();
+    private static List<Item> commonPool = new List<Item>();
 
     [SerializeField]
-    private static List<Item> rare = new List<Item>();
+    private static List<Item> rarePool = new List<Item>();
 
     [SerializeField]
-    private static List<Item> legendary = new List<Item>();
+    private static List<Item> legendaryPool = new List<Item>();
+
+    private int commonProb = 8;
+    private int rareProb = 3;
+    private int legendProb = 1;
 
 
     void Awake()
@@ -33,14 +37,14 @@ public class ItemManager : MonoBehaviour
                 Item item = i.GetComponent<Item>();
                 switch (item.Rarity)
                 {
-                    case ("Common"):
-                        common.Add(item);
+                    case ((Item.ItemRarity)0):
+                        commonPool.Add(item);
                         break;
-                    case ("Rare"):
-                        rare.Add(item);
+                    case ((Item.ItemRarity)1):
+                        rarePool.Add(item);
                         break;
-                    case ("Legendary"):
-                        legendary.Add(item);
+                    case ((Item.ItemRarity)2):
+                        legendaryPool.Add(item);
                         break;
                     default:
                         break; // shouldn't get here, but just in case before we try to remove something from a pool it isnt in.
@@ -61,21 +65,88 @@ public class ItemManager : MonoBehaviour
 
     public void RemoveFromPool(Item item)
     {
+        int itemIndex;
         switch (item.Rarity)
         {
-            case ("Common"):
-                common.Remove(item);
+            case ((Item.ItemRarity)0):
+                itemIndex = commonPool.FindIndex(x => x.ItemName() == item.ItemName());
+                commonPool.RemoveAt(itemIndex);
                 break;
-            case ("Rare"):
-                rare.Remove(item);
+            case ((Item.ItemRarity)1):
+                itemIndex = rarePool.FindIndex(x => x.ItemName() == item.ItemName());
+                rarePool.RemoveAt(itemIndex);
                 break;
-            case ("Legendary"):
-                legendary.Remove(item);
+            case ((Item.ItemRarity)2):
+                itemIndex = legendaryPool.FindIndex(x => x.ItemName() == item.ItemName());
+                legendaryPool.RemoveAt(itemIndex);
                 break;
             default:
                 break; // shouldn't get here, but just in case before we try to remove something from a pool it isnt in.
         }
 
+    }
+
+    public Item RollItem()
+    {
+        // Determine the item rarity from the next random number. 
+        int itemRarity = RandomNumberGenerator.instance.NextItem();
+        itemRarity -= commonProb;
+        Item.ItemRarity rarity;
+        if (itemRarity < 0)
+            rarity = Item.ItemRarity.Common;
+        else
+        {
+            itemRarity -= rareProb;
+            if (itemRarity < 0)
+                rarity = Item.ItemRarity.Rare;
+            else
+                rarity = Item.ItemRarity.Legendary;
+        }
+
+        // Randomly choose an item from the respective pool.
+        int nextItemIndex = RandomNumberGenerator.instance.Next();
+        Item nextItem = null; 
+        // TODO: Eventually if an item pool is depleted, a default item will be spawned instead e.g. a HP up. 
+        // For now however the placeholders will not be removed from the pools on pickup, so they will never empty.
+        switch(rarity)
+        {
+            case Item.ItemRarity.Common:
+                if (nextItemIndex >= commonPool.Count)
+                    nextItemIndex = ReduceNumber(nextItemIndex, commonPool.Count);
+                nextItem = commonPool[nextItemIndex];
+                break;
+            case Item.ItemRarity.Rare:
+                if (nextItemIndex >= rarePool.Count)
+                    nextItemIndex = ReduceNumber(nextItemIndex, rarePool.Count);
+                nextItem = rarePool[nextItemIndex];
+                break;
+            case Item.ItemRarity.Legendary:
+                if (nextItemIndex >= legendaryPool.Count)
+                    nextItemIndex = ReduceNumber(nextItemIndex, legendaryPool.Count);
+                nextItem = legendaryPool[nextItemIndex];
+                break;
+        }
+
+        return nextItem;
+        
+    }
+
+    public int ReduceNumber(int num, int capacity)
+    {
+        int result = num;
+        do
+        {
+            int rhs = result % 10; // ones
+            int lhs = (result / 10) % 10; // tens
+
+            result = lhs + rhs;
+
+            if (result <= 10)
+            {
+                result = Mathf.Abs(result - capacity);
+            }
+        } while (result >= capacity);
+        return result;
     }
 
     // Start is called before the first frame update

@@ -122,4 +122,4 @@ MonoBehaviour:
   itemName: Food
   itemDesc: Restore 1 Heart
   itemType: 0
-  rarity: Common
+  rarity: 0

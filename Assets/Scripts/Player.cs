@@ -37,10 +37,10 @@ public class Player : MonoBehaviour
         // If the player is still moving, do nothing this update.
         if (isMoving || onCooldown)
             return;
-
+        
         if (Input.GetKeyDown("space"))
         {
-            if (Stats.active != null)
+            if (Stats.active != null && Stats.RoomCount % 5 != 0) // Disable using active items in item rooms due to them being accidentally picked up again and resetting charge.
             {
                 Stats.active.OnUse();
             }

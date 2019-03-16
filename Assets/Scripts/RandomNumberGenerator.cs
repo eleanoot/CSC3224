@@ -7,8 +7,10 @@ public class RandomNumberGenerator : MonoBehaviour
     public static RandomNumberGenerator instance = null;
     
     private static List<int> randomNumbers;
+    private static List<int> itemRarity;
     
-    private static int currentIndex;
+    private static int currentRandomIndex;
+    private static int currentItemIndex;
     
     [SerializeField]
     private string seed = "";
@@ -35,7 +37,15 @@ public class RandomNumberGenerator : MonoBehaviour
                 //Debug.Log(randomNumbers[i]);
             }
 
-            currentIndex = 0;
+            itemRarity = new List<int>();
+
+            for (int i = 0; i < 5000; i++)
+            {
+                itemRarity.Add(Random.Range(0, 12)); // 8 = common, 3 = rare, 1 = legendary. 
+            }
+
+            currentRandomIndex = 0;
+            currentItemIndex = 0;
         }
         //If instance already exists and it's not this:
         else if (instance != this)
@@ -50,11 +60,17 @@ public class RandomNumberGenerator : MonoBehaviour
 
     public int Next()
     {
-        int nextNo = randomNumbers[currentIndex];
-        currentIndex++;
+        int nextNo = randomNumbers[currentRandomIndex];
+        currentRandomIndex++;
         return nextNo;
     }
 
+    public int NextItem()
+    {
+        int nextNo = itemRarity[currentItemIndex];
+        currentItemIndex++;
+        return nextNo;
+    }
     
 
 }

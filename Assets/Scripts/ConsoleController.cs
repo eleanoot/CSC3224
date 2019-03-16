@@ -187,7 +187,7 @@ public class ConsoleController {
             appendLogLine("Expected an integer for arg2.");
         }
         int y = 0;
-        if (!Int32.TryParse(args[1], out y))
+        if (!Int32.TryParse(args[2], out y))
         {
             appendLogLine("Expected an integer for arg3.");
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class CatPlush : Item
 {
     // Decoy will be destroyed when it runs out of health. 
-    private int hp;
+    private int hp = 3;
 
     // Keep hold of a reference to all the enemies for use in updating target later.
     GameObject[] enemies;
@@ -16,31 +16,47 @@ public class CatPlush : Item
         // Can take three hits for the player regardless of damage done by the enemy. 
         hp = 3;
         
-
-        DontDestroyOnLoad(gameObject);
     }
     protected override void Pickup()
     {
         // If the player doesn't already have an active item, pick this one up.
         // Otherwise switch out the existing one. 
-        if (Stats.active == null)
+        //if (Stats.active == null)
+        //{
+        //    // Update the item charges and allow this to be used immediately.
+        //    Stats.ActiveCharge = 3;
+        //    Stats.CurrentCharge = 3;
+        //    gameObject.SetActive(false);
+        //    // Remove the text displays to prevent them from triggering on pickup since this item will be sticking around. 
+        //    foreach (Transform child in transform)
+        //    {
+        //        if (child != transform)
+        //            Destroy(child.gameObject);
+        //    }
+        //    Stats.ActiveItem = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else if (Stats.active != this)
+        //{
+        //    Switch();
+        //    // Remove the text displays to prevent them from triggering on pickup since this item will be sticking around. 
+        //    foreach (Transform child in transform)
+        //    {
+        //        if (child != transform)
+        //            Destroy(child.gameObject);
+        //    }
+        //    Stats.ActiveCharge = 3;
+        //    Stats.CurrentCharge = 3;
+        //}
+        
+        if (Stats.active != this)
         {
-            // Update the item charges and allow this to be used immediately.
             Stats.ActiveCharge = 3;
             Stats.CurrentCharge = 3;
-            gameObject.SetActive(false);
-            // Remove the text displays to prevent them from triggering on pickup since this item will be sticking around. 
-            foreach (Transform child in transform)
-            {
-                if (child != transform)
-                    Destroy(child.gameObject);
-            }
-            Stats.ActiveItem = this;
+            base.Pickup();
+            DontDestroyOnLoad(gameObject);
         }
-        else
-        {
-            Switch();
-        }
+        
     }
 
     public override void OnUse()

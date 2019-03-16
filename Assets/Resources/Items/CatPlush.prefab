@@ -96,7 +96,7 @@ MonoBehaviour:
   itemName: Cat Plush
   itemDesc: Enemies target where placed for 3 hits
   itemType: 1
-  rarity: Rare
+  rarity: 1
 --- !u!61 &7674327010021819719
 BoxCollider2D:
   m_ObjectHideFlags: 0

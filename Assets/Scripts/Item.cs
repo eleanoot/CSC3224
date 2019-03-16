@@ -11,6 +11,13 @@ public abstract class Item : MonoBehaviour
         Active, // player can only have one and are activated on a keypress. usually need charge time. 
     }
 
+    public enum ItemRarity
+    {
+        Common,
+        Rare,
+        Legendary
+    }
+
     // The name of this item. 
     [SerializeField]
     protected string itemName;
@@ -22,7 +29,7 @@ public abstract class Item : MonoBehaviour
     protected ItemType itemType;
     // The rarity of this item to identify which pool it comes from. 
     [SerializeField]
-    protected string rarity;
+    protected ItemRarity rarity;
     
     
 
@@ -31,7 +38,34 @@ public abstract class Item : MonoBehaviour
     // Keep a reference to the Player. 
     protected Player player;
 
-    protected abstract void Pickup();
+    protected virtual void Pickup()
+    {
+        if (itemType == ItemType.Active)
+        {
+            if (Stats.active != null)
+                // Manually undo the DontDestroyOnLoad of the current active item. 
+                Destroy(Stats.ActiveItem.gameObject);
+
+            gameObject.SetActive(false);
+            // Remove the text displays to prevent them from triggering on pickup since this item will be sticking around. 
+            foreach (Transform child in transform)
+            {
+                if (child != transform)
+                   Destroy(child.gameObject);
+            }
+            Stats.ActiveItem = this;
+
+            //ItemManager.instance.RemoveFromPool(this);
+        }
+
+        ItemManager.instance.RemoveFromPool(this);
+
+    }
+
+    public string ItemName()
+    {
+        return itemName;
+    }
 
     // Only necessary for active items to implement, as passive items will always be active. 
     public virtual void OnUse()
@@ -44,10 +78,15 @@ public abstract class Item : MonoBehaviour
     // so not all derivations need to implement this. 
     protected void Switch()
     {
-        return;
+        // Manually undo the DontDestroyOnLoad of the current active item. 
+        Destroy(Stats.ActiveItem.gameObject);
+        // Set this picked up active item as the current active item.
+        Stats.ActiveItem = this;
+        DontDestroyOnLoad(gameObject);
+        gameObject.SetActive(false);
     }
 
-    public string Rarity
+    public ItemRarity Rarity
     {
         get
         {

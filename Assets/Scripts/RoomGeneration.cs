@@ -55,29 +55,31 @@ public class RoomGeneration : MonoBehaviour
 
         if (Stats.RoomCount % 5 != 0)
         {
-            this.currentRoom.PopulateEnemies(this.noOfEnemies, this.possibleEnemies);
-
             obstacleTilemap = tilemaps[2];
             this.currentRoom.PopulateObstacles(this.noOfObstacles, this.possibleObstacleSizes);
+            this.currentRoom.PopulateEnemies(this.noOfEnemies, this.possibleEnemies);
+
+           
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
         }
         else // Item room. No enemies, just three items randomly rolled to choose from in the same positions every time. 
         {
-            // Spawn an item room every 5 rooms (may change).
-            // eventually randomise 3 items and display in the middle with flavourtext when nearby. 
-            //Instantiate(Resources.Load("Items/FairyDust"));
-
+            // Spawn an item room every 5 rooms (may change if too frequent).
             GameObject[] chosenItems = new GameObject[3];
-            chosenItems[0] = ItemManager.instance.allItems[0];
-            chosenItems[1] = ItemManager.instance.allItems[1];
-            chosenItems[2] = ItemManager.instance.allItems[2];
+            for (int i = 0; i < 3; ++i)
+            {
+                Item nextItem;
+                // Continue to roll this item until it is different from all the others rolled so far.
+                do
+                {
+                    nextItem = ItemManager.instance.RollItem();
+                } while (chosenItems[0] == nextItem.gameObject || chosenItems[1] == nextItem.gameObject);
+                chosenItems[i] = nextItem.gameObject;
+            }
 
             this.currentRoom.PopulateItems(chosenItems);
             obstacleTilemap = tilemaps[2];
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
-
-            
-
         }
         
         decorationTilemap = tilemaps[3];
