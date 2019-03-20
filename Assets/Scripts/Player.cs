@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
         if (horizontal != 0 || vertical != 0)
         {
             // Start some delay between movements to prevent going too fast.
-            StartCoroutine(ActionCooldown(0.2f));
+            StartCoroutine(ActionCooldown(Stats.Speed));
             MovePlayer(horizontal, vertical);
         }
 
@@ -131,6 +131,8 @@ public class Player : MonoBehaviour
             //    hit.transform.gameObject.SendMessage("DisplayText", true);
             //else
             //    hit.transform.gameObject.SendMessage("DisplayText", false);
+           // Vector2Int update = Stats.TransformToGrid(targetTile);
+            //Debug.Log(string.Format("new tile: {0}, {1}", update.x, update.y));
         }
         else
         {
@@ -178,6 +180,8 @@ public class Player : MonoBehaviour
         {
             Vector3 newPos = Vector3.MoveTowards(transform.position, end, inverseMoveTime * Time.deltaTime);
             transform.position = newPos;
+            //Vector2Int update = Stats.TransformToGrid(transform.position);
+            //Debug.Log(string.Format("new tile: {0}, {1}", update.x, update.y));
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
             // Wait until the next frame to continue execution. 
@@ -218,6 +222,7 @@ public class Player : MonoBehaviour
         {
             Vector3 newPos = Vector3.MoveTowards(transform.position, originalPos, inverseMoveTime * Time.deltaTime);
             transform.position = newPos;
+            
             sqrRemainingDistance = (transform.position - originalPos).sqrMagnitude;
 
             yield return null;

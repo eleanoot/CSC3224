@@ -12,12 +12,21 @@ public class FoxMage : Enemy
     {
         // right, up, left, down, 
         attackTargets = new List<Vector2Int> { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 0), new Vector2Int(0, -1) };
-        actionTime = 2f;
+        actionTime = 1.5f;
+        delayTime = (float)RandomNumberGenerator.instance.Next() / 100;
+        Debug.Log(string.Format("delay time {0}", delayTime));
+        delayTimer = delayTime;
     }
 
     void Update()
     {
-        Attack();
+        // Run down the delay timer before starting to attack. 
+        if (delayTimer > 0f)
+        {
+            delayTimer -= Time.deltaTime;
+        }
+        if (delayTimer <= 0f)
+            Attack();
         
     }
 
@@ -46,5 +55,9 @@ public class FoxMage : Enemy
         }
 
     }
-    
+
+    public override List<Vector2Int> GetAttackTargets()
+    {
+        return new List<Vector2Int> { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 0), new Vector2Int(0, -1) };
+    }
 }

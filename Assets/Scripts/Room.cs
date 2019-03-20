@@ -10,6 +10,18 @@ public class Room
     
     private Dictionary<string, GameObject> name2Prefab;
 
+    // The total number of obstacles and enemies on the board. 
+    private int totalElementsOnBoard;
+    // Represents the number of elements on the main rows of the grid. A row will no longer be considered for addition to if 5 or more elements are already on it (the max that can cover the exit while still allowing a passage through).
+    // index 0 = row 1, y coords go from 0 to 7 on the main grid. 
+    private int[] elementsPerRow;
+
+    private const int MAX_ROWS_FILLED = 4;
+    private const int MAX_ROW_AMOUNT = 5;
+
+    private int enemyNumCap;
+
+
     public Room()
     {
         // Initialise the grid.
@@ -23,7 +35,21 @@ public class Room
         }
 
         this.name2Prefab = new Dictionary<string, GameObject>();
-        
+        totalElementsOnBoard = 0;
+        elementsPerRow = new int[8];
+
+        // Based on a y = 3^x graph, where x is the number of item rooms passed through.
+       
+        if (Stats.ItemRoomCount == 0)
+        {
+            enemyNumCap = 6;
+        }
+        else if (Stats.ItemRoomCount == 1)
+            enemyNumCap = 8;
+        else
+        {
+            enemyNumCap = (int)Mathf.Pow(3.0f, Stats.ItemRoomCount);
+        }
     }
 
     // Add obstacle tiles to the tile positions marked by the grid.
@@ -73,6 +99,11 @@ public class Room
                 }
             }
         }
+
+       //for (int i = 0; i < 8; i++)
+       // {
+       //     Debug.Log(string.Format("Row {0}: {1} element(s)", i + 1, elementsPerRow[i]));
+       // }
     }
 
     // Add decoration tiles to the tile positions marked by the grid.
@@ -131,6 +162,8 @@ public class Room
             int centreX = (coord / 10) % 10; // tens
             if (centreX > 7)
                 centreX = 7;
+            if (centreY < 1)
+                centreY = 1; // Prevent an enemy spawning on the first row - unfair if directly in front of the player right away!
 
             Vector2Int centreTile = new Vector2Int(centreX, centreY);
 
@@ -164,7 +197,13 @@ public class Room
             List<Vector2Int> region = FindFreeRegion(regionSize);
             foreach (Vector2Int coord in region)
             {
-                this.population[coord.x, coord.y] = "Obstacle";
+                if (this.population[coord.x, coord.y] == "")
+                {
+                    this.population[coord.x, coord.y] = "Obstacle";
+                    // Update the number of elements on this row.
+                    elementsPerRow[coord.y]++;
+                }
+               
             }
         }
     }
@@ -188,9 +227,29 @@ public class Room
         }
     }
 
-    public void PopulateEnemies(int numberOfPrefabs, GameObject[] possiblePrefabs)
+    public bool CloseRegion(Vector2Int region, Vector2Int lastPos)
     {
-        for (int prefabIndex = 0; prefabIndex < numberOfPrefabs; prefabIndex += 1)
+        return (region.x + 1 == lastPos.x || region.x - 1 == lastPos.x || region.y + 1 == lastPos.y || region.y - 1 == lastPos.y);
+    }
+
+    public void PopulateEnemies(GameObject[] possiblePrefabs)
+    {
+        // int noOfEnemies = Random.Range(3, enemyNumCap);
+        int noOfEnemies = RandomNumberGenerator.instance.Next();
+        Debug.Log(string.Format("random no {0}", noOfEnemies));
+        if (noOfEnemies > enemyNumCap)
+            noOfEnemies = ReduceNumber(noOfEnemies, enemyNumCap);
+        Debug.Log(string.Format("reduced no {0}", noOfEnemies));
+        if (noOfEnemies < enemyNumCap / 3)
+        {
+            noOfEnemies = enemyNumCap / 3;
+        }
+        Debug.Log(string.Format("reduced no {0}", noOfEnemies));
+        int rowsFilled = 0;
+        Vector2Int lastEnemy = new Vector2Int(-10, -10);
+        // Keep placing enemies until one of the stop conditions has been met for the grid being too full. 
+        int count = 0;
+        do
         {
             // Get the next random number to choose the enemy being added here.
             int choiceIndex = RandomNumberGenerator.instance.Next();
@@ -198,11 +257,77 @@ public class Room
                 choiceIndex = ReduceNumber(choiceIndex, possiblePrefabs.Length);
 
             GameObject prefab = possiblePrefabs[choiceIndex];
-            List<Vector2Int> region = FindFreeRegion(new Vector2Int(1, 1));
 
-            this.population[region[0].x, region[0].y] = prefab.name;
-            this.name2Prefab[prefab.name] = prefab;
-        }
+            // Repeat until a free row is found for this placement. 
+            List<Vector2Int> region;
+
+            // Repeat finding a position for this enemy until it's on a valid row and not close to the last enemy placed - attempt to spread them across the board. 
+            do
+            {
+                region = FindFreeRegion(new Vector2Int(1, 1));
+            } while (elementsPerRow[region[0].y] == MAX_ROW_AMOUNT || CloseRegion(region[0], lastEnemy));
+
+            if (this.population[region[0].x, region[0].y] == "")
+            {
+                this.population[region[0].x, region[0].y] = prefab.name;
+                this.name2Prefab[prefab.name] = prefab;
+                elementsPerRow[region[0].y]++;
+                if (elementsPerRow[region[0].y] >= MAX_ROW_AMOUNT)
+                    rowsFilled++;
+
+                lastEnemy = region[0];
+            }
+
+            // Add the tiles this enemy covers with their attack to the row counts. 
+            Enemy chosenEnemy = prefab.GetComponent<Enemy>();
+            List<Vector2Int> targets = chosenEnemy.GetAttackTargets();
+            foreach (Vector2Int coord in targets)
+            {
+                int newY = region[0].y + coord.y;
+                if (newY >= 0 && newY < 8)
+                {
+                    elementsPerRow[newY]++;
+                    if (elementsPerRow[newY] == MAX_ROW_AMOUNT)
+                        rowsFilled++;
+                }
+                    
+            }
+
+            count++;
+
+        } while (rowsFilled <= MAX_ROWS_FILLED && count < noOfEnemies); 
+
+
+
+
+        //for (int prefabIndex = 0; prefabIndex < noOfEnemies; prefabIndex += 1)
+        //{
+        //    // Get the next random number to choose the enemy being added here.
+        //    int choiceIndex = RandomNumberGenerator.instance.Next();
+        //    if (choiceIndex >= possiblePrefabs.Length)
+        //        choiceIndex = ReduceNumber(choiceIndex, possiblePrefabs.Length);
+
+        //    GameObject prefab = possiblePrefabs[choiceIndex];
+
+        //    List<Vector2Int> region = FindFreeRegion(new Vector2Int(1, 1));
+        //    if (this.population[region[0].x, region[0].y] == "")
+        //    {
+        //        this.population[region[0].x, region[0].y] = prefab.name;
+        //        this.name2Prefab[prefab.name] = prefab;
+        //        elementsPerRow[region[0].y]++;
+        //    }
+
+        //    // Add the tiles this enemy covers with their attack to the row counts. 
+        //    Enemy chosenEnemy = prefab.GetComponent<Enemy>();
+        //    List<Vector2Int> targets = chosenEnemy.GetAttackTargets();
+        //    foreach (Vector2Int coord in targets)
+        //    {
+        //        int newY = region[0].y + coord.y;
+        //        if (newY >= 0 && newY < 8)
+        //             elementsPerRow[newY]++;
+        //    }
+            
+        //}
     }
 
     public void PopulateItems(GameObject[] items)
@@ -233,6 +358,7 @@ public class Room
                 result = Mathf.Abs(result - possibleSizes);
             }
         } while (result >= possibleSizes);
+
         return result;
     }
 }

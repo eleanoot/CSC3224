@@ -15,7 +15,10 @@ public abstract class Enemy : MonoBehaviour
     protected Transform target;
     // The time it takes this Enemy to act. 
     protected float actionTime;
+    // Delay for this enemy to begin looping attacks. Used only once. 
+    protected float delayTime;
     protected float attackTimer = 0f;
+    protected float delayTimer = 0f;
 
     // Reference to the sprite renderer to flash the sprite on hit. 
     private Renderer rend;
@@ -65,4 +68,6 @@ public abstract class Enemy : MonoBehaviour
         if (hp <= 0)
             Destroy(gameObject);
     }
+
+    public abstract List<Vector2Int> GetAttackTargets();
 }

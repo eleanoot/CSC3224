@@ -16,8 +16,6 @@ public class RoomGeneration : MonoBehaviour
 
     [SerializeField]
     private int noOfObstacles;
-    [SerializeField]
-    private int noOfEnemies;
 
     // Parameters for the floor decorations and how they could be laid out.
     [SerializeField]
@@ -57,7 +55,7 @@ public class RoomGeneration : MonoBehaviour
         {
             obstacleTilemap = tilemaps[2];
             this.currentRoom.PopulateObstacles(this.noOfObstacles, this.possibleObstacleSizes);
-            this.currentRoom.PopulateEnemies(this.noOfEnemies, this.possibleEnemies);
+            this.currentRoom.PopulateEnemies(this.possibleEnemies);
 
            
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
@@ -80,6 +78,8 @@ public class RoomGeneration : MonoBehaviour
             this.currentRoom.PopulateItems(chosenItems);
             obstacleTilemap = tilemaps[2];
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
+
+            Stats.ItemRoomCount++;
         }
         
         decorationTilemap = tilemaps[3];

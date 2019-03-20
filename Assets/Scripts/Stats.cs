@@ -8,9 +8,10 @@ using UnityEngine.UI;
 
 public class Stats
 {
-    // Count the number of rooms the player's passed through.
+    // Count the number of ALL rooms the player's passed through.
     private static int roomCount = 0;
-
+    // Count the number of ITEM rooms the player's passed through. Used for enemy number scaling. 
+    private static int itemRoomCount = 0;
     // the total possible number of heart containers the player can have
     public const int MAX_TOTAL_HEALTH = 6;
     public delegate void OnHealthChangedDelegate();
@@ -29,6 +30,9 @@ public class Stats
     // the number of tiles away the player can melee attack. 
     private static int range = 1;
 
+    // the cooldown required between movements.
+    private static float speed = 0.3f;
+
     // Each type of item the player has. 
     public static List<Item> passives = new List<Item>();
     public static Item active;
@@ -45,6 +49,7 @@ public class Stats
         maxHp = 3.0f;
         dmg = 0.5f;
         range = 1;
+        speed = 0.3f;
         passives.Clear();
         GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
 
@@ -54,6 +59,7 @@ public class Stats
         }
         active = null;
         roomCount = 0;
+        itemRoomCount = 0;
         activeItemCharge = 0;
         currentCharge = 0;
     }
@@ -68,7 +74,19 @@ public class Stats
         }
         set
         {
-            roomCount = value; // incrementing is the only setting that should occur, no jumping between numbers
+            roomCount = value;
+        }
+    }
+
+    public static int ItemRoomCount
+    {
+        get
+        {
+           return itemRoomCount;
+        }
+        set
+        {
+            itemRoomCount = value; 
         }
     }
 
@@ -152,6 +170,19 @@ public class Stats
         }
     }
 
+    /* SPEED */
+    public static float Speed
+    {
+        get
+        {
+            return speed;
+        }
+        set
+        {
+            speed = value;
+        }
+    }
+
     /* RANGE */
     public static int Range
     {
@@ -206,6 +237,11 @@ public class Stats
         {
             return active;
         }
+    }
+
+    public static Vector2Int TransformToGrid(Vector2 t)
+    {
+        return new Vector2Int((int)(t.x - 0.5f + 4), (int)(t.y - 0.5f + 4));
     }
 
 }
