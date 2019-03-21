@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour
 {
+    private float DEFAULT_TIME = 90f;
     public static Manager instance = null;
     private static GameObject gameOverImage;
 
@@ -103,8 +104,11 @@ public class Manager : MonoBehaviour
         Stats.Reset();
         // Unpause the game.
         Time.timeScale = 1;
+        
         // Restart the scene.
         SceneManager.LoadScene("Runner");
+        // Restart timer.
+        ResetTimer(DEFAULT_TIME);
 
     }
 

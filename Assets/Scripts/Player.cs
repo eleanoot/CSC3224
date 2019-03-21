@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
         if (isMoving || onCooldown)
             return;
         
+
+        // Use active item. 
         if (Input.GetKeyDown("space"))
         {
             if (Stats.active != null && Stats.RoomCount % 5 != 0) // Disable using active items in item rooms due to them being accidentally picked up again and resetting charge.
@@ -61,7 +63,87 @@ public class Player : MonoBehaviour
             StartCoroutine(ActionCooldown(Stats.Speed));
             MovePlayer(horizontal, vertical);
         }
+    }
 
+    // Attacking checked for in late update after any possible movement has occured- a player might try to quickly move next to an enemy, attack, then move back out of range. 
+    // This won't register if both actions are in the same frame due to the coroutine.
+    private void LateUpdate()
+    {
+        // Currently can only either move or attack per frame- no movement and then attacking at the end of it. 
+        if (Input.GetKeyDown("w"))
+        {
+            Attack('w');
+        }
+        else if (Input.GetKeyDown("a"))
+        {
+            Attack('a');
+        }
+        else if (Input.GetKeyDown("s"))
+        {
+            Attack('s');
+        }
+        else if (Input.GetKeyDown("d"))
+        {
+            Attack('d');
+        }
+    }
+
+    private void Attack(char key)
+    {
+        int xDir = 0;
+        int yDir = 0;
+       switch (key)
+        {
+            case 'a':
+                xDir = -1;
+                anim.SetTrigger("turnLeft");
+                anim.ResetTrigger("turnRight");
+                anim.ResetTrigger("turnUp");
+                anim.ResetTrigger("turnDown");
+                break;
+            case 'd':
+                xDir = 1;
+                anim.SetTrigger("turnRight");
+                anim.ResetTrigger("turnLeft");
+                anim.ResetTrigger("turnUp");
+                anim.ResetTrigger("turnDown");
+                break;
+            case 'w':
+                yDir = 1;
+                anim.SetTrigger("turnUp");
+                anim.ResetTrigger("turnRight");
+                anim.ResetTrigger("turnLeft");
+                anim.ResetTrigger("turnDown");
+                break;
+            case 's':
+                yDir = -1;
+                anim.SetTrigger("turnDown");
+                anim.ResetTrigger("turnRight");
+                anim.ResetTrigger("turnUp");
+                anim.ResetTrigger("turnLeft");
+                break;
+        }
+
+        Vector2 startTile = transform.position;
+        Vector2 targetTile = startTile + new Vector2(xDir, yDir);
+        // Raycast to check if an enemy prefab is on this tile. Cast a line from the start point to the end point on the Units layer.
+        //Disable the boxCollider so that linecast doesn't hit this object's own collider.
+        boxCollider.enabled = false;
+        // Set target tile for enemy spaces based on the player's current range.
+        Vector2 rangeTile = startTile + new Vector2(xDir * Stats.Range, yDir * Stats.Range);
+        RaycastHit2D hit = Physics2D.Linecast(startTile, rangeTile, unitsMask);
+        //Re-enable boxCollider after linecast
+        boxCollider.enabled = true;
+        if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
+        {
+            if (Stats.Range > 1 && hit.distance >= 1.0)
+            {
+                StartCoroutine(SmoothMovement(rangeTile - new Vector2(xDir, yDir)));
+            }
+            //Debug.Log(string.Format("hit a {0}", hit.transform.gameObject.name));
+            hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
+            
+        }
         
     }
 
@@ -107,16 +189,21 @@ public class Player : MonoBehaviour
         // Raycast to check if an enemy prefab is on this tile. Cast a line from the start point to the end point on the Units layer.
         //Disable the boxCollider so that linecast doesn't hit this object's own collider.
         boxCollider.enabled = false;
-        // Set target tile for enemy spaces based on the player's current range.
-        Vector2 rangeTile = startTile + new Vector2(xDir * Stats.Range, yDir * Stats.Range);
-        RaycastHit2D hit = Physics2D.Linecast(startTile, rangeTile, unitsMask);
+        // Set target tile for enemy spaces.
+        //Vector2 rangeTile = startTile + new Vector2(xDir * Stats.Range, yDir * Stats.Range);
+        RaycastHit2D hit = Physics2D.Linecast(startTile, targetTile, unitsMask);
         //Re-enable boxCollider after linecast
         boxCollider.enabled = true;
 
+        // If trying to move onto the same tile as an enemy, take a bit of damage. 
         if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
         {
             //Debug.Log(string.Format("hit a {0}", hit.transform.gameObject.name));
-            hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
+            //hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
+            Stats.TakeDamage(0.5f);
+            StartCoroutine(IsHit());
+            StartCoroutine(BlockedMovement(targetTile));
+            
         }
         // If the tile to move to does not contain a wall or obstacle, it's a valid move. 
         else if (!hasObstacle && !hasWall)
@@ -184,9 +271,27 @@ public class Player : MonoBehaviour
             //Debug.Log(string.Format("new tile: {0}, {1}", update.x, update.y));
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
+           
             // Wait until the next frame to continue execution. 
             yield return null;
         }
+        if (Input.GetKeyUp("w"))
+        {
+            Debug.Log("w pressed");
+        }
+        else if (Input.GetKeyDown("a"))
+        {
+            Debug.Log("a pressed");
+        }
+        else if (Input.GetKeyDown("s"))
+        {
+            Debug.Log("s pressed");
+        }
+        else if (Input.GetKeyDown("d"))
+        {
+            Debug.Log("d pressed");
+        }
+
 
         // Coroutine has finished moving the player.
         isMoving = false;
@@ -225,8 +330,10 @@ public class Player : MonoBehaviour
             
             sqrRemainingDistance = (transform.position - originalPos).sqrMagnitude;
 
-            yield return null;
+            
         }
+
+
 
         isMoving = false;
     }

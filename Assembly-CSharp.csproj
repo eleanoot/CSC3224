@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Enemies\FoxMage.cs" />
     <Compile Include="Assets\Scripts\Enemies\FoxMageDark.cs" />
     <Compile Include="Assets\Scripts\Enemies\MouseBasic.cs" />
+    <Compile Include="Assets\Scripts\Enemies\SleepingDog.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\ExitRoom.cs" />
     <Compile Include="Assets\Scripts\FullscreenSprite.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\ItemManager.cs" />
     <Compile Include="Assets\Scripts\Items\ActiveItemPlaceholder.cs" />
+    <Compile Include="Assets\Scripts\Items\Boots.cs" />
     <Compile Include="Assets\Scripts\Items\CatPlush.cs" />
     <Compile Include="Assets\Scripts\Items\CommonPlaceholder.cs" />
     <Compile Include="Assets\Scripts\Items\FairyDust.cs" />

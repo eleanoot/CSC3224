@@ -56,8 +56,6 @@ public class RoomGeneration : MonoBehaviour
             obstacleTilemap = tilemaps[2];
             this.currentRoom.PopulateObstacles(this.noOfObstacles, this.possibleObstacleSizes);
             this.currentRoom.PopulateEnemies(this.possibleEnemies);
-
-           
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
         }
         else // Item room. No enemies, just three items randomly rolled to choose from in the same positions every time. 

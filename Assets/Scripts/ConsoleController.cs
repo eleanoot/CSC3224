@@ -145,6 +145,7 @@ public class ConsoleController {
         appendLogLine(string.Format("Max HP: {0}", Stats.MaxHp));
         appendLogLine(string.Format("Damage: {0}", Stats.Dmg));
         appendLogLine(string.Format("Range: {0}", Stats.Range));
+        appendLogLine(string.Format("Speed: {0}", Stats.Speed));
     }
 
     void setTimer(string[] args)
@@ -266,7 +267,9 @@ public class ConsoleController {
             case "Dmg": Stats.Dmg = value; break;
             case "HP":
             case "Health":
+            case "hp":
             case "Hp": Stats.Heal(value); break;
+            case "Speed": Stats.Speed = value / 10; break;
             default:
                 appendLogLine("Error: stat not recognised"); break;
 

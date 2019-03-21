@@ -16,7 +16,6 @@ public class FoxMageDark : Enemy
         attackTargets = new List<Vector2Int> { new Vector2Int(1, 1), new Vector2Int(-1, 1), new Vector2Int(-1, -1), new Vector2Int(1, -1) };
         actionTime = 1.5f;
         delayTime = (float)RandomNumberGenerator.instance.Next() / 100;
-        Debug.Log(string.Format("delay time {0}", delayTime));
         delayTimer = delayTime;
     }
 
@@ -40,7 +39,7 @@ public class FoxMageDark : Enemy
         if (attackTimer > 0f)
         {
             attackTimer -= Time.deltaTime;
-            if (attackTimer <= 0f)
+            if (attackTimer <= 0f && !defeated)
             {
                 // Disable the enemy's box collider for now so the projectiles don't collide with itself.
                 float angle = 0f;

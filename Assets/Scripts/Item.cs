@@ -57,6 +57,11 @@ public abstract class Item : MonoBehaviour
 
             //ItemManager.instance.RemoveFromPool(this);
         }
+        else if (itemType == ItemType.Passive)
+        {
+            // Add the item into the player's picked up passives. 
+            Stats.passives.Add(this);
+        }
 
         ItemManager.instance.RemoveFromPool(this);
 

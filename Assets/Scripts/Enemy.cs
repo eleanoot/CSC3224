@@ -22,6 +22,8 @@ public abstract class Enemy : MonoBehaviour
 
     // Reference to the sprite renderer to flash the sprite on hit. 
     private Renderer rend;
+
+    protected bool defeated;
     
 
     // Start is called before the first frame update
@@ -29,6 +31,7 @@ public abstract class Enemy : MonoBehaviour
     {
         rend = GetComponent<Renderer>();
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        defeated = false;
     }
 
     // Will be overridden by functons in the inherited classes that specialise the enemy type.
@@ -56,6 +59,8 @@ public abstract class Enemy : MonoBehaviour
     // 'Flash' the sprite when attacked.
     private IEnumerator IsHit()
     {
+        if (hp <= 0)
+            defeated = true; 
         for (int i = 0; i < 5; i++)
         {
             rend.enabled = true;

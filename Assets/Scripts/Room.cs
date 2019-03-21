@@ -42,14 +42,15 @@ public class Room
        
         if (Stats.ItemRoomCount == 0)
         {
-            enemyNumCap = 6;
+            enemyNumCap = 4;
         }
         else if (Stats.ItemRoomCount == 1)
-            enemyNumCap = 8;
+            enemyNumCap = 6;
         else
         {
             enemyNumCap = (int)Mathf.Pow(3.0f, Stats.ItemRoomCount);
         }
+        
     }
 
     // Add obstacle tiles to the tile positions marked by the grid.
@@ -234,17 +235,16 @@ public class Room
 
     public void PopulateEnemies(GameObject[] possiblePrefabs)
     {
-        // int noOfEnemies = Random.Range(3, enemyNumCap);
         int noOfEnemies = RandomNumberGenerator.instance.Next();
-        Debug.Log(string.Format("random no {0}", noOfEnemies));
-        if (noOfEnemies > enemyNumCap)
-            noOfEnemies = ReduceNumber(noOfEnemies, enemyNumCap);
-        Debug.Log(string.Format("reduced no {0}", noOfEnemies));
-        if (noOfEnemies < enemyNumCap / 3)
+
+        while (noOfEnemies > enemyNumCap)
         {
-            noOfEnemies = enemyNumCap / 3;
+            noOfEnemies -= enemyNumCap;
         }
-        Debug.Log(string.Format("reduced no {0}", noOfEnemies));
+        if (noOfEnemies < 3)
+        {
+            noOfEnemies = 4; // A minimum number of enemies on the level.
+        }
         int rowsFilled = 0;
         Vector2Int lastEnemy = new Vector2Int(-10, -10);
         // Keep placing enemies until one of the stop conditions has been met for the grid being too full. 

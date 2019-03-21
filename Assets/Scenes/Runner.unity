@@ -149,6 +149,7 @@ MonoBehaviour:
   - {fileID: 543087603794089867, guid: 8d78ac56ebc2e2848b85ea429b78914c, type: 3}
   - {fileID: 3293493479769608132, guid: e373175157fa9de41a0eca45c1b9a7b9, type: 3}
   - {fileID: 7534979496596542520, guid: 925b9c89a30aa6a45ba364573f0a1265, type: 3}
+  - {fileID: 3583915698044349979, guid: be0d3d42f653df946aad96bd96f026cb, type: 3}
   flavourText: {fileID: 15691876590896014, guid: 0d5bdd411976f8542a3b323762c3308a,
     type: 3}
 --- !u!4 &135508151
@@ -413,6 +414,7 @@ MonoBehaviour:
   - {fileID: 3867485212661672195, guid: 5343c248ccbdafe46b6f410bb519248b, type: 3}
   - {fileID: 3450767067191773275, guid: 44875739c0194764aac02b2fa5c3ae38, type: 3}
   - {fileID: 4541589254985461989, guid: cb518a7602206324b982bb96b087c4e1, type: 3}
+  - {fileID: 380887193885876306, guid: 90cdf104e7f70594d85899c4c70f1904, type: 3}
   noOfObstacles: 3
   decorationTiles:
   - {fileID: 11400000, guid: bc54c7bf6c04eb64088109fbf5c343a9, type: 2}
@@ -2443,7 +2445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9e31732d0a45a54cbdc081c25f27fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 
+  seed: TESTER
 --- !u!4 &1183158427
 Transform:
   m_ObjectHideFlags: 0

@@ -14,7 +14,6 @@ public class FoxMage : Enemy
         attackTargets = new List<Vector2Int> { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 0), new Vector2Int(0, -1) };
         actionTime = 1.5f;
         delayTime = (float)RandomNumberGenerator.instance.Next() / 100;
-        Debug.Log(string.Format("delay time {0}", delayTime));
         delayTimer = delayTime;
     }
 
@@ -38,7 +37,7 @@ public class FoxMage : Enemy
         if (attackTimer > 0f)
         {
             attackTimer -= Time.deltaTime;
-            if (attackTimer <= 0f)
+            if (attackTimer <= 0f && !defeated)
             {
                 float angle = 0f;
                 foreach (Vector2 n in attackTargets)

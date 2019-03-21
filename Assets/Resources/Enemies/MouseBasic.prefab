@@ -113,10 +113,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ba7f21153c9cd40957fb777c5d6020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 1
+  hp: 0.5
   damageDealt: 0.5
   movementTime: 0.15
   obstaclesTilemap: {fileID: 0}
+  wallsTilemap: {fileID: 0}
   unitsMask:
     serializedVersion: 2
     m_Bits: 512

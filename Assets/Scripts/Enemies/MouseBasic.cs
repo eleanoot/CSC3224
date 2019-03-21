@@ -13,6 +13,7 @@ public class MouseBasic : Enemy
     public LayerMask unitsMask;
     
     private List<Path> bestPath = new List<Path>();
+
     private Animator anim;
 
     void Awake()
@@ -27,14 +28,18 @@ public class MouseBasic : Enemy
         actionTime = 0.5f;
         attackTimer = actionTime;
         delayTime = (float)RandomNumberGenerator.instance.Next() / 100;
-        Debug.Log(string.Format("delay time {0}", delayTime));
         delayTimer = delayTime;
     }
 
     void Update()
     {
 
-        Attack();
+        if (delayTimer > 0f)
+        {
+            delayTimer -= Time.deltaTime;
+        }
+        if (delayTimer <= 0f)
+            Attack();
 
     }
 
@@ -47,7 +52,7 @@ public class MouseBasic : Enemy
         if (attackTimer > 0f)
         {
             attackTimer -= Time.deltaTime;
-            if (attackTimer <= 0f)
+            if (attackTimer <= 0f && !defeated)
             {
                 HappyPath();
                 //Debug.Log(string.Format("best path count {0}", bestPath.Count));
@@ -153,6 +158,17 @@ public class MouseBasic : Enemy
             Vector2 targetTile = originalPos;
             StartCoroutine(SmoothMovement(targetTile));
         }
+
+        // If this mouse ended up on the same position as another mouse, push it back. 
+        this.GetComponent<BoxCollider2D>().enabled = false;
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position, unitsMask);
+        this.GetComponent<BoxCollider2D>().enabled = true;
+        if (hit.transform != null && (hit.transform.gameObject.tag == "Enemy"))
+        {
+            Vector2 startTile = transform.position;
+            Vector2 targetTile = originalPos;
+            StartCoroutine(SmoothMovement(targetTile));
+        }
     }
 
 
@@ -192,12 +208,10 @@ public class MouseBasic : Enemy
         this.GetComponent<BoxCollider2D>().enabled = true;
         if (hit.transform != null && (hit.transform != target.transform))
         {
-            // TO-DO: fix enemy going back and forth when player is right next to an enemy tile
             // Debug.Log(string.Format("enemy at {0}, {1}", end.x, end.y));
             return true;
         }
         else if (hasObstacle || hasWall)
-          //  if (hasObstacle || hasWall)
             return true;
         return false;
     }

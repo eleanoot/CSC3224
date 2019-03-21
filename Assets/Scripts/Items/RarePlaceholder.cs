@@ -6,7 +6,7 @@ public class RarePlaceholder : Item
 {
     protected override void Pickup()
     {
-        Debug.Log("Picked up");
+        
     }
 
     // Update is called once per frame

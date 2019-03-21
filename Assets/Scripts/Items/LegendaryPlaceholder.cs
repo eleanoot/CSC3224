@@ -6,7 +6,7 @@ public class LegendaryPlaceholder : Item
 {
     protected override void Pickup()
     {
-        Debug.Log("Picked up");
+      
     }
 
 
