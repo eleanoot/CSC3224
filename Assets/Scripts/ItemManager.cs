@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Manages the item pools and deals with rolling items for item rooms. 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +12,10 @@ public class ItemManager : MonoBehaviour
 
     public GameObject[] allItems; // the actual item prefabs to be instantiated.
 
+    // Manage UI elements for all items in one central place.
     public Text flavourText;
 
+    // Item pools to split the items by rarity. Can possibly be arrays once the number of items in the game is more set. 
     [SerializeField]
     private static List<Item> commonPool = new List<Item>();
 
@@ -21,6 +25,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField]
     private static List<Item> legendaryPool = new List<Item>();
 
+    // The relative probabilties of items of each type appearing in an item room. 
     private int commonProb = 8;
     private int rareProb = 3;
     private int legendProb = 1;
@@ -107,7 +112,7 @@ public class ItemManager : MonoBehaviour
         int nextItemIndex = RandomNumberGenerator.instance.Next();
         Item nextItem = null; 
         // TODO: Eventually if an item pool is depleted, a default item will be spawned instead e.g. a HP up. 
-        // For now however the placeholders will not be removed from the pools on pickup, so they will never empty.
+        // For now however the demo placeholders will not be removed from the pools on pickup, so they will never empty.
         switch(rarity)
         {
             case Item.ItemRarity.Common:
@@ -131,6 +136,8 @@ public class ItemManager : MonoBehaviour
         
     }
 
+    // Split the latest random number to be used into values that can be used by item generation. 
+    // Split into single digits from the tens and ones and add together. If only one digit, simply subtract the maximum value. Repeat until number is small enough. 
     public int ReduceNumber(int num, int capacity)
     {
         int result = num;
@@ -149,15 +156,5 @@ public class ItemManager : MonoBehaviour
         return result;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
 }

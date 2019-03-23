@@ -1,5 +1,5 @@
 ﻿/*
- *  Adapted from the free Unity store asset 'Simple Health Heart System' by ariel oliveira [o.arielg@gmail.com]
+ *  Heart health bar UI element filling. Adapted from the free Unity store asset 'Simple Health Heart System' by ariel oliveira [o.arielg@gmail.com]
  */
 
 using UnityEngine;

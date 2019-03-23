@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Base point for the overall generation of any normal or item room. 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -6,18 +8,20 @@ using UnityEngine.UI;
 
 public class RoomGeneration : MonoBehaviour
 {
-    // Parameters for the obstacles and how they could be laid out.
+    // The possible obstacle tileset.
     [SerializeField]
     private TileBase[] obstacleTiles;
+    // The possible sizes of regions the obstacles will be laid out in, e.g. 2x1
     [SerializeField]
     private Vector2Int[] possibleObstacleSizes;
     [SerializeField]
-    private GameObject[] possibleEnemies;
-
-    [SerializeField]
     private int noOfObstacles;
 
-    // Parameters for the floor decorations and how they could be laid out.
+    // The possible enemies to spawn. Can eventually be split up into variants of different enemies to spawn at higher levels. 
+    [SerializeField]
+    private GameObject[] possibleEnemies;
+    
+    // Parameters for the floor decorations and how they could be laid out. Similar to obstacles. 
     [SerializeField]
     private TileBase[] decorationTiles;
     [SerializeField]
@@ -25,14 +29,14 @@ public class RoomGeneration : MonoBehaviour
     [SerializeField]
     private int noOfDecorations;
 
-    // The tilemap references that will be randomly added to.
+    // The references for tilemaps that will be dynamically added to in room generation.
     private Tilemap obstacleTilemap;
     private Tilemap decorationTilemap;
 
+    // Hold the current room we're generating. 
     private Room currentRoom;
-
-    private GameObject randomGen;
-
+    
+    // The relevant UI element for displaying which room the player is currently in. 
     private Text roomText;
     
 
@@ -42,25 +46,27 @@ public class RoomGeneration : MonoBehaviour
         this.currentRoom = new Room();
         Grid roomObject = GetComponent<Grid>();
         Tilemap[] tilemaps = GetComponentsInChildren<Tilemap>();
+        obstacleTilemap = tilemaps[2];
 
         // Increment the room count and display it in the GUI.
         roomText = GameObject.Find("RoomText").GetComponent<Text>();
         Stats.RoomCount++;
         roomText.text = "Room " + Stats.RoomCount;
 
-        // Increment active charge count from passing into another rooms.
+        // Increment active charge count from passing into another room.
         Stats.CurrentCharge++;
 
+        // Normal room, so place obstacles and enemies. 
         if (Stats.RoomCount % 5 != 0)
         {
-            obstacleTilemap = tilemaps[2];
             this.currentRoom.PopulateObstacles(this.noOfObstacles, this.possibleObstacleSizes);
             this.currentRoom.PopulateEnemies(this.possibleEnemies);
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
         }
-        else // Item room. No enemies, just three items randomly rolled to choose from in the same positions every time. 
+        // Item room. No enemies, just three items randomly rolled to choose from in the same positions every time. 
+        // Spawn an item room every 5 rooms (may change if too frequent).
+        else
         {
-            // Spawn an item room every 5 rooms (may change if too frequent).
             GameObject[] chosenItems = new GameObject[3];
             for (int i = 0; i < 3; ++i)
             {
@@ -74,7 +80,6 @@ public class RoomGeneration : MonoBehaviour
             }
 
             this.currentRoom.PopulateItems(chosenItems);
-            obstacleTilemap = tilemaps[2];
             this.currentRoom.AddPopulationToTilemap(obstacleTilemap, this.obstacleTiles);
 
             Stats.ItemRoomCount++;
@@ -83,11 +88,6 @@ public class RoomGeneration : MonoBehaviour
         decorationTilemap = tilemaps[3];
         this.currentRoom.PopulateDecorations(this.noOfDecorations, this.possibleDecorationSizes);
         this.currentRoom.AddDecorationToTilemap(decorationTilemap, this.decorationTiles);
-
-        
-
-        
-
     }
 
     

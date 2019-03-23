@@ -1,7 +1,6 @@
-﻿/// <summary>
-/// Marshals events and data between ConsoleController and uGUI.
-/// Copyright (c) 2014-2015 Eliot Lash
-/// </summary>
+﻿
+// Display the UI for the developer console. 
+// Adapted from code by Eliot Lash, 2014-2015.
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text;
@@ -12,7 +11,8 @@ public class ConsoleView : MonoBehaviour {
 	
 	bool didShow = false;
 
-	public GameObject viewContainer; //Container for console view, should be a child of this GameObject
+    //Container for console view.
+    public GameObject viewContainer; 
 	public Text logTextArea;
 	public InputField inputField;
 
@@ -30,7 +30,7 @@ public class ConsoleView : MonoBehaviour {
 	}
 	
 	void Update() {
-        //Toggle visibility when tilde key pressed
+        // Toggle visibility when tilde key pressed
         if (Input.GetKeyUp("`")) 
         {
             toggleVisibility();
@@ -61,9 +61,8 @@ public class ConsoleView : MonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// Event that should be called by anything wanting to submit the current input to the console.
-	/// </summary>
+	
+	// Event that should be called by anything wanting to submit the current input to the console.
 	public void runCommand() {
 		console.runCommandString(inputField.text);
 		inputField.text = "";

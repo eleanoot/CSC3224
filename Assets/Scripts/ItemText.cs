@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Object to behave as a trigger tile for stepping close to an item and displaying its description. 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ public class ItemText : MonoBehaviour
 
     private Item item;
 
+    // Turn on and off text display when the player is on the trigger.
     private void OnTriggerEnter2D(Collider2D collision)
     {
         item.SendMessage("DisplayText", true);
@@ -22,10 +25,5 @@ public class ItemText : MonoBehaviour
     {
         item = GetComponentInParent<Item>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

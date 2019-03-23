@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Manages the current overall state of the game: the current time, whether the game is over, and restarting. 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,18 +8,19 @@ using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour
 {
+    // The default amount of time the game lets you progress for. Will eventually be pickable. 
     private float DEFAULT_TIME = 90f;
     public static Manager instance = null;
+
+    // UI to display the game over.
     private static GameObject gameOverImage;
-
     private static Text gameOverText;
-
+    public static GameObject restartButton;
     public float levelTimeInSeconds;
     public static Text timerText;
-    public static GameObject restartButton;
-
+    
+    // Keep a reference to the current timer running process to be able to stop and restart it between runs. 
     Coroutine timerCoroutine;
-    private bool timerRunning;
 
     void Awake()
     {
@@ -53,7 +56,6 @@ public class Manager : MonoBehaviour
     void Start()
     {
         timerCoroutine = StartCoroutine(levelTimer());
-        timerRunning = true;
     }
 
     IEnumerator levelTimer()
@@ -73,6 +75,7 @@ public class Manager : MonoBehaviour
             yield return null;
         }
 
+        // When this coroutine finishes, the elapsed run time has passed and the game is over. 
         timerText.text = string.Format("{0:0}:{1:00}", 0, 0);
         GameOver(false);
 
@@ -86,18 +89,6 @@ public class Manager : MonoBehaviour
     }
     
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    // Initialises the game for each room that's loaded. 
-    public void InitGame()
-    {
-        
-    }
-
     public void RestartGame()
     {
         // Clear all player stats and items. 
@@ -109,6 +100,9 @@ public class Manager : MonoBehaviour
         SceneManager.LoadScene("Runner");
         // Restart timer.
         ResetTimer(DEFAULT_TIME);
+        // Restart the background music. 
+        SoundManager.instance.bgSource.Stop();
+        SoundManager.instance.bgSource.Play();
 
     }
 
@@ -125,7 +119,7 @@ public class Manager : MonoBehaviour
         }
         else
         {
-            gameOverText.text = "That's far enough for now...\nYou cleared " + (Stats.RoomCount - 1) + " rooms";
+            gameOverText.text = "That's far enough for now... good job!\nYou cleared " + (Stats.RoomCount - 1) + " rooms";
         }
         
     }

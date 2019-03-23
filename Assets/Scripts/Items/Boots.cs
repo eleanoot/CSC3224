@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Gives the player a movement speed up of -0.1 to reduce their cooldown between actions. 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

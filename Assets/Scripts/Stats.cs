@@ -18,8 +18,6 @@ public class Stats
     public static OnHealthChangedDelegate onHealthChangedCallback;
     public static bool isInvulnerable = false; // prevent hits for the period of sprite flash. 
 
-   
-
     // the player's current hp 
     private static float hp = 3.0f;
     // the total amount of hp the player can currently have 
@@ -37,8 +35,10 @@ public class Stats
     public static List<Item> passives = new List<Item>();
     public static Item active;
 
-    // Stored in here rather than in item to retain between rooms. 
+    // Active item charge. Stored in here rather than in item to retain between rooms. 
+    // The amount of charge this item needs to be used. 
     private static int activeItemCharge;
+    // The current charge on the item.
     private static int currentCharge;
     
 
@@ -51,6 +51,7 @@ public class Stats
         range = 1;
         speed = 0.3f;
         passives.Clear();
+        // Remove active items kept for use and any on the board.
         GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
 
         foreach (GameObject i in items)
@@ -65,7 +66,6 @@ public class Stats
     }
 
     /* ROOM COUNT */
-    // Will probably need a full reset at some point to reset all this stuff for another run - setup function somewhere?
     public static int RoomCount
     {
         get
@@ -218,6 +218,7 @@ public class Stats
         set
         {
             currentCharge = value;
+            // Prevent charge overflow.
             if (currentCharge > activeItemCharge)
                 currentCharge = activeItemCharge;
             
@@ -239,6 +240,7 @@ public class Stats
         }
     }
 
+    // Convert the transform of a position into a tile space on the grid. Currently in here for accesibility everywhere. 
     public static Vector2Int TransformToGrid(Vector2 t)
     {
         return new Vector2Int((int)(t.x - 0.5f + 4), (int)(t.y - 0.5f + 4));

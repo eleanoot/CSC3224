@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿// Enemy that stays in position on one tile and does nothing. 
+// Intended to cause consideration of movement around the grid as stepping onto an enemy causes hp loss. 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,17 +12,13 @@ public class SleepingDog : Enemy
     void Awake()
     {
         // Empty. Will only take up its own tile on the board. 
-        attackTargets = new List<Vector2Int> { };
+        attackTargets = new Vector2Int[] { };
     }
+    
 
-    // Update is called once per frame
-    void Update()
+    public override Vector2Int[] GetAttackTargets()
     {
-    }
-
-    public override List<Vector2Int> GetAttackTargets()
-    {
-        return new List<Vector2Int> { };
+        return new Vector2Int[] { };
     }
 
     protected override void Attack()

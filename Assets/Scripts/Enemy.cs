@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Base enemy class containing information and methods all enemy types will use. 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,9 +11,9 @@ public abstract class Enemy : MonoBehaviour
     public double hp;
     // How many hearts this enemy's attack knocks off the player.
     public float damageDealt;
-    // The squares this enemy aims for, if any.
-    protected List<Vector2Int> attackTargets;
-    // The particular unit this enemy aims for, if any direction: by default its the player. 
+    // The squares this enemy aims for, if any. Used in calculation of spaces taken up on the grid.
+    protected Vector2Int[] attackTargets;
+    // The particular unit this enemy aims for, if any attack direction: by default its the player. 
     protected Transform target;
     // The time it takes this Enemy to act. 
     protected float actionTime;
@@ -23,6 +25,7 @@ public abstract class Enemy : MonoBehaviour
     // Reference to the sprite renderer to flash the sprite on hit. 
     private Renderer rend;
 
+    // Used to freeze the enemy from attacking when their HP is zero so the player can't be taken out by a technically defeated enemy unfairly. 
     protected bool defeated;
     
 
@@ -36,19 +39,12 @@ public abstract class Enemy : MonoBehaviour
 
     // Will be overridden by functons in the inherited classes that specialise the enemy type.
     protected abstract void Attack();
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     void TakeDamage(float dmg)
     {
-        // Debug.Log(string.Format("{0} hit for {1} dmg", gameObject.name, dmg));
         hp -= dmg;
         StartCoroutine(IsHit());
-        
     }
 
     protected void UpdateTarget(Transform newTarget)
@@ -74,5 +70,11 @@ public abstract class Enemy : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public abstract List<Vector2Int> GetAttackTargets();
+    // Must be implemented specifically by the enemy to calculate before instantiation.
+    public abstract Vector2Int[] GetAttackTargets();
+
+    public bool IsDefeated()
+    {
+        return defeated;    
+    }
 }

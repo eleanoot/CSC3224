@@ -1,9 +1,6 @@
-﻿/// <summary>
-/// Handles parsing and execution of console commands, as well as collecting log output.
-/// Copyright (c) 2014-2015 Eliot Lash
-/// </summary>
+﻿// Implements the development console commands for dev manipulation of the game for test purposes.
+// Adapted from code by Eliot Lash 2014-2015.
 using UnityEngine;
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,18 +9,14 @@ public delegate void CommandHandler(string[] args);
 
 public class ConsoleController {
 	
-	#region Event declarations
 	// Used to communicate with ConsoleView
 	public delegate void LogChangedHandler(string[] log);
 	public event LogChangedHandler logChanged;
 	
 	public delegate void VisibilityChangedHandler(bool visible);
 	public event VisibilityChangedHandler visibilityChanged;
-	#endregion
 
-	/// <summary>
-	/// Object to hold information about each command
-	/// </summary>
+	// Object to hold information about each command.
 	class CommandRegistration {
 		public string command { get; private set; }
 		public CommandHandler handler { get; private set; }
@@ -48,7 +41,6 @@ public class ConsoleController {
 
 	public string[] log { get; private set; } //Copy of scrollback as an array for easier use by ConsoleView
 	
-	const string repeatCmdName = "!!"; //Name of the repeat command, constant since it needs to skip these if they are in the command history
 	
 	public ConsoleController() {
 		//When adding commands, you must add a call below to registerCommand() with its name, implementation method, and help text.
@@ -56,7 +48,6 @@ public class ConsoleController {
 		registerCommand("hide", hide, "Hide the console.");
         registerCommand("allitems", listAllItems, "List all the possible items to spawn.");
         registerCommand("allenemies", listAllEnemies, "List all the possible enemies to spawn.");
-		registerCommand(repeatCmdName, repeatCommand, "Repeat last command.");
 		registerCommand("restart", restart, "Restart run.");
         registerCommand("stats", printStats, "Prints the player's current stats.");
         registerCommand("settime", setTimer, "Set the run timer to the given value.");
@@ -70,7 +61,6 @@ public class ConsoleController {
 	}
 	
 	public void appendLogLine(string line) {
-		Debug.Log(line);
 		
 		if (scrollback.Count >= ConsoleController.scrollbackSize) {
 			scrollback.Dequeue();
@@ -290,16 +280,6 @@ public class ConsoleController {
 		}
 	}
 	
-	void repeatCommand(string[] args) {
-		for (int cmdIdx = commandHistory.Count - 1; cmdIdx >= 0; --cmdIdx) {
-			string cmd = commandHistory[cmdIdx];
-			if (String.Equals(repeatCmdName, cmd)) {
-				continue;
-			}
-			runCommandString(cmd);
-			break;
-		}
-	}
 	
 	void restart(string[] args) {
         Manager.instance.RestartGame();

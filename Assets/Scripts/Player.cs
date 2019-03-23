@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿// Manages control of the player character. 
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
     // Tilemap references to check for collisions. 
-    // CAN'T just use Unity's colliders with the current smooth movement system as will get stuck forever trying to move onto that tile. 
     public Tilemap groundTilemap;
     public Tilemap wallsTilemap;
     public Tilemap obstaclesTilemap;
 
+    // The layer for which to check for collider collisions with. 
     public LayerMask unitsMask;
 
     // How long the smooth movement will take.
@@ -37,17 +39,7 @@ public class Player : MonoBehaviour
         // If the player is still moving, do nothing this update.
         if (isMoving || onCooldown)
             return;
-        
-
-        // Use active item. 
-        if (Input.GetKeyDown("space"))
-        {
-            if (Stats.active != null && Stats.RoomCount % 5 != 0) // Disable using active items in item rooms due to them being accidentally picked up again and resetting charge.
-            {
-                Stats.active.OnUse();
-            }
-        }
-
+       
         // Get the move direction.
         int horizontal = (int)Input.GetAxisRaw("Horizontal");
         int vertical = (int)Input.GetAxisRaw("Vertical");
@@ -69,7 +61,16 @@ public class Player : MonoBehaviour
     // This won't register if both actions are in the same frame due to the coroutine.
     private void LateUpdate()
     {
-        // Currently can only either move or attack per frame- no movement and then attacking at the end of it. 
+        // Use active item. 
+        if (Input.GetKeyDown("space"))
+        {
+            if (Stats.active != null && Stats.RoomCount % 5 != 0) // Disable using active items in item rooms due to them being accidentally picked up again and resetting charge.
+            {
+                Stats.active.OnUse();
+            }
+        }
+        
+        // Attack in any direction, not just the current one being faced. 
         if (Input.GetKeyDown("w"))
         {
             Attack('w');
@@ -127,20 +128,20 @@ public class Player : MonoBehaviour
         Vector2 startTile = transform.position;
         Vector2 targetTile = startTile + new Vector2(xDir, yDir);
         // Raycast to check if an enemy prefab is on this tile. Cast a line from the start point to the end point on the Units layer.
-        //Disable the boxCollider so that linecast doesn't hit this object's own collider.
+        // Disable the boxCollider so that linecast doesn't hit this object's own collider.
         boxCollider.enabled = false;
         // Set target tile for enemy spaces based on the player's current range.
         Vector2 rangeTile = startTile + new Vector2(xDir * Stats.Range, yDir * Stats.Range);
         RaycastHit2D hit = Physics2D.Linecast(startTile, rangeTile, unitsMask);
-        //Re-enable boxCollider after linecast
+        // Re-enable boxCollider after linecast
         boxCollider.enabled = true;
         if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
         {
+            // If the player is attacking from a distance, 'pounce' to a tile in front of the enemy. Otherwise just attack from where standing.  
             if (Stats.Range > 1 && hit.distance >= 1.0)
             {
                 StartCoroutine(SmoothMovement(rangeTile - new Vector2(xDir, yDir)));
             }
-            //Debug.Log(string.Format("hit a {0}", hit.transform.gameObject.name));
             hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
             
         }
@@ -195,11 +196,9 @@ public class Player : MonoBehaviour
         //Re-enable boxCollider after linecast
         boxCollider.enabled = true;
 
-        // If trying to move onto the same tile as an enemy, take a bit of damage. 
-        if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
+        // If trying to move onto the same tile as an enemy that isn't at 0 hp, take a bit of damage. 
+        if (hit.transform != null && hit.transform.gameObject.tag == "Enemy" && !hit.transform.gameObject.GetComponent<Enemy>().IsDefeated())
         {
-            //Debug.Log(string.Format("hit a {0}", hit.transform.gameObject.name));
-            //hit.transform.gameObject.SendMessage("TakeDamage", Stats.Dmg);
             Stats.TakeDamage(0.5f);
             StartCoroutine(IsHit());
             StartCoroutine(BlockedMovement(targetTile));
@@ -209,17 +208,6 @@ public class Player : MonoBehaviour
         else if (!hasObstacle && !hasWall)
         {
             StartCoroutine(SmoothMovement(targetTile));
-
-            // Check if there's an item in front of the new tile. 
-            //boxCollider.enabled = false;
-            //hit = Physics2D.Linecast(targetTile, targetTile + new Vector2(xDir, yDir), unitsMask);
-            //boxCollider.enabled = true;
-            //if (hit.transform != null && hit.transform.gameObject.tag == "Item")
-            //    hit.transform.gameObject.SendMessage("DisplayText", true);
-            //else
-            //    hit.transform.gameObject.SendMessage("DisplayText", false);
-           // Vector2Int update = Stats.TransformToGrid(targetTile);
-            //Debug.Log(string.Format("new tile: {0}, {1}", update.x, update.y));
         }
         else
         {
@@ -237,8 +225,6 @@ public class Player : MonoBehaviour
         }
 
     }
-
-
     
     /* COROUTINES */
     // 'Flash' the sprite when attacked.
@@ -267,32 +253,12 @@ public class Player : MonoBehaviour
         {
             Vector3 newPos = Vector3.MoveTowards(transform.position, end, inverseMoveTime * Time.deltaTime);
             transform.position = newPos;
-            //Vector2Int update = Stats.TransformToGrid(transform.position);
-            //Debug.Log(string.Format("new tile: {0}, {1}", update.x, update.y));
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
-
-           
+            
             // Wait until the next frame to continue execution. 
             yield return null;
         }
-        if (Input.GetKeyUp("w"))
-        {
-            Debug.Log("w pressed");
-        }
-        else if (Input.GetKeyDown("a"))
-        {
-            Debug.Log("a pressed");
-        }
-        else if (Input.GetKeyDown("s"))
-        {
-            Debug.Log("s pressed");
-        }
-        else if (Input.GetKeyDown("d"))
-        {
-            Debug.Log("d pressed");
-        }
-
-
+       
         // Coroutine has finished moving the player.
         isMoving = false;
     }
